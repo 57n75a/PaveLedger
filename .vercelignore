@@ -1,0 +1,4 @@
+# The original snapshot is for handoff/reference, not the deployed application.
+reference/
+tests/
+SHA256SUMS.txt
