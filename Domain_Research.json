@@ -1,0 +1,107 @@
+[
+  {
+    "domain": "paveledger.ca",
+    "url": "https://rdap.ca.fury.ca/rdap/domain/paveledger.ca",
+    "checked_utc": "2026-09-25T14:14:18.613211+00:00",
+    "http_status": 404,
+    "registration": "No RDAP record (not a purchase guarantee)"
+  },
+  {
+    "domain": "paveledger.com",
+    "url": "https://rdap.verisign.com/com/v1/domain/paveledger.com",
+    "checked_utc": "2026-09-25T14:14:18.614203+00:00",
+    "http_status": 404,
+    "registration": "No RDAP record (not a purchase guarantee)"
+  },
+  {
+    "domain": "paveledger.org",
+    "url": "https://rdap.publicinterestregistry.org/rdap/domain/paveledger.org",
+    "checked_utc": "2026-09-25T14:14:18.615011+00:00",
+    "http_status": 404,
+    "registration": "No RDAP record (not a purchase guarantee)"
+  },
+  {
+    "domain": "paveledger.net",
+    "url": "https://rdap.verisign.com/net/v1/domain/paveledger.net",
+    "checked_utc": "2026-09-25T14:14:18.615610+00:00",
+    "http_status": 404,
+    "registration": "No RDAP record (not a purchase guarantee)"
+  },
+  {
+    "domain": "paveledger.ai",
+    "url": "https://rdap.identitydigital.services/rdap/domain/paveledger.ai",
+    "checked_utc": "2026-09-25T14:14:18.616342+00:00",
+    "http_status": 404,
+    "registration": "No RDAP record (not a purchase guarantee)"
+  },
+  {
+    "domain": "roadcovenant.ca",
+    "url": "https://rdap.ca.fury.ca/rdap/domain/roadcovenant.ca",
+    "checked_utc": "2026-09-25T14:14:23.412215+00:00",
+    "http_status": 404,
+    "registration": "No RDAP record (not a purchase guarantee)"
+  },
+  {
+    "domain": "roadcovenant.com",
+    "url": "https://rdap.verisign.com/com/v1/domain/roadcovenant.com",
+    "checked_utc": "2026-09-25T14:14:24.448373+00:00",
+    "http_status": 404,
+    "registration": "No RDAP record (not a purchase guarantee)"
+  },
+  {
+    "domain": "roadcovenant.org",
+    "url": "https://rdap.publicinterestregistry.org/rdap/domain/roadcovenant.org",
+    "checked_utc": "2026-09-25T14:14:24.748953+00:00",
+    "http_status": 404,
+    "registration": "No RDAP record (not a purchase guarantee)"
+  },
+  {
+    "domain": "roadcovenant.net",
+    "url": "https://rdap.verisign.com/net/v1/domain/roadcovenant.net",
+    "checked_utc": "2026-09-25T14:14:24.798780+00:00",
+    "http_status": 404,
+    "registration": "No RDAP record (not a purchase guarantee)"
+  },
+  {
+    "domain": "roadcovenant.ai",
+    "url": "https://rdap.identitydigital.services/rdap/domain/roadcovenant.ai",
+    "checked_utc": "2026-09-25T14:14:26.257060+00:00",
+    "http_status": 404,
+    "registration": "No RDAP record (not a purchase guarantee)"
+  },
+  {
+    "domain": "paveaccount.ca",
+    "url": "https://rdap.ca.fury.ca/rdap/domain/paveaccount.ca",
+    "checked_utc": "2026-09-25T14:14:26.363933+00:00",
+    "http_status": 404,
+    "registration": "No RDAP record (not a purchase guarantee)"
+  },
+  {
+    "domain": "paveaccount.com",
+    "url": "https://rdap.verisign.com/com/v1/domain/paveaccount.com",
+    "checked_utc": "2026-09-25T14:14:27.936415+00:00",
+    "http_status": 404,
+    "registration": "No RDAP record (not a purchase guarantee)"
+  },
+  {
+    "domain": "paveaccount.org",
+    "url": "https://rdap.publicinterestregistry.org/rdap/domain/paveaccount.org",
+    "checked_utc": "2026-09-25T14:14:28.058766+00:00",
+    "http_status": 404,
+    "registration": "No RDAP record (not a purchase guarantee)"
+  },
+  {
+    "domain": "paveaccount.net",
+    "url": "https://rdap.verisign.com/net/v1/domain/paveaccount.net",
+    "checked_utc": "2026-09-25T14:14:30.235820+00:00",
+    "http_status": 404,
+    "registration": "No RDAP record (not a purchase guarantee)"
+  },
+  {
+    "domain": "paveaccount.ai",
+    "url": "https://rdap.identitydigital.services/rdap/domain/paveaccount.ai",
+    "checked_utc": "2026-09-25T14:14:30.341566+00:00",
+    "http_status": 404,
+    "registration": "No RDAP record (not a purchase guarantee)"
+  }
+]
