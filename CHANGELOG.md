@@ -1,3 +1,11 @@
+## 2.0.8 - 2026-09-26
+- Contractor is now shown as a column on the dashboard and assignable directly from the ticket page (Admin, Team lead)
+- Archive/unarchive/request-archive controls moved to the bottom of each investigation
+- Priority now shown in the Overview Attention queue
+- Fixed the stretched logo image; reporter photos and the logo fallback are now sized correctly
+- All four Overview metric cards are now clickable and jump to the matching filtered view
+- Added a visible Teams list to the Teams & access page
+
 ## 2.0.6 - 2026-09-26
 - Added a personal "My tickets" summary to the Overview page, showing status counts for cases you are personally assigned to, reported, or have completed/closed
 
