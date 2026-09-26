@@ -1,3 +1,7 @@
+## 2.0.5 - 2026-09-26
+- Archived tickets are now hidden from Overview, Investigations, and Analytics
+- Added a dedicated Archive section in the sidebar, visible only to Admin, Team lead, and Director
+
 ## 2.0.4 - 2026-09-26
 - Added archive as a flag (not a status): tickets are never deleted, only archived
 - Admin, Team lead, and Director can archive/unarchive directly from the ticket page
