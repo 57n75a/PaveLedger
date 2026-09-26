@@ -24,14 +24,14 @@ export function applyAction(s:State,m:Member,actual:Member,body:Record<string,un
   const v=z.object({name:short,email:z.string().trim().email().max(250).transform(x=>x.toLowerCase()),role:z.enum(roles as [typeof roles[number],...typeof roles[number][]]),team:z.string().max(150),contractor:z.string().max(150),vehicleTag:z.string().max(150),authUserId:z.string().uuid(),active:z.boolean()}).parse(body);
   const existing=action==='memberUpdate'?s.members.find(x=>x.id===body.memberId):undefined;if(action==='memberUpdate'&&!existing)throw new AppError('Member not found.');
   if(s.members.some(x=>x.id!==existing?.id&&(x.email.toLowerCase()===v.email||x.authUserId===v.authUserId)))throw new AppError('Email or authentication user ID already has a membership.');
-  if(['Team lead','Analyst','Reviewer'].includes(v.role)&&!s.teams.includes(v.team))throw new AppError('Choose an existing team.');
+  if(['Team lead','Analyst','Reviewer','Head Analyst'].includes(v.role)&&!s.teams.includes(v.team))throw new AppError('Choose an existing team.');
   if(v.role==='Contractor'&&!s.contracts.some(x=>x.contractor===v.contractor))throw new AppError('Choose an existing contractor firm.');
   if(v.role==='Vehicle'&&!v.vehicleTag.trim())throw new AppError('Enter a vehicle tag (e.g. Truck-07).');
   if(existing&&(existing.id===actual.id||existing.id===ownerId)&&(v.role!==existing.role||v.active!==isActive(existing)||v.authUserId!==(existing.authUserId||existing.id)))throw new AppError('Your own access and the designated owner identity cannot be demoted, suspended or rebound here.');
   if(existing?.role==='Admin'&&(v.role!=='Admin'||!v.active)&&s.members.filter(x=>x.role==='Admin'&&isActive(x)).length<=1)throw new AppError('Keep at least one active administrator.');
   if(existing&&(!v.active||v.role!=='Analyst'||v.team!==existing.team)&&s.tickets.some(t=>t.analyst===existing.id&&!closed(t)))throw new AppError('Reassign this member’s open investigations before changing their access or team.');
   if(existing&&existing.authUserId&&existing.authUserId!==v.authUserId)throw new AppError('An existing account binding cannot be replaced. Create a new membership and suspend the old one.');
-  const clean={...v,team:['Team lead','Analyst','Reviewer','Admin'].includes(v.role)?v.team:'',contractor:v.role==='Contractor'?v.contractor:'',vehicleTag:v.role==='Vehicle'?v.vehicleTag:'',demo:false};
+  const clean={...v,team:['Team lead','Analyst','Reviewer','Admin','Head Analyst'].includes(v.role)?v.team:'',contractor:v.role==='Contractor'?v.contractor:'',vehicleTag:v.role==='Vehicle'?v.vehicleTag:'',demo:false};
   if(existing)Object.assign(existing,clean);else s.members.push({id:crypto.randomUUID(),...clean});
   event=`Membership ${existing?'updated':'created'}: ${v.name}; role ${v.role}; active ${v.active}`;
  }else{
@@ -64,7 +64,7 @@ export function applyAction(s:State,m:Member,actual:Member,body:Record<string,un
   }else if(action==='priority'){
    if(!isActive(m)||m.role==='Auditor')throw new AppError('This action is not permitted for your role.',403);
    const sev=z.enum(['Urgent','Standard','Low']).parse(body.severity);t.severity=sev;event='Priority set to '+sev;
-  }else if(action==='note'){requireRole(['Admin','Team lead','Analyst','Reviewer','Contractor']);noteField.parse(note);event='Note added';}
+  }else if(action==='note'){requireRole(['Admin','Team lead','Analyst','Reviewer','Contractor']);noteField.parse(note);event='Note added';}else if(action==='escalate'){const targetRole=m.role==='Head Analyst'?'Team lead':m.role==='Team lead'?'Director':null;if(!targetRole)throw new AppError('Your role cannot escalate tickets.',403);t.escalatedTo=targetRole;t.updated=now;const recipients=s.members.filter(x=>isActive(x)&&x.role===targetRole&&(targetRole!=='Team lead'||x.team===t.team));recipients.forEach(r=>s.notifications.unshift({id:crypto.randomUUID(),recipient:r.id,ticket:t.id,text:`Escalated to ${targetRole}: ${t.road}`,at:now}));event='Escalated to '+targetRole;}
   else throw new AppError('Unknown action.');
   t.updated=now;t.history.push({at:now,actor,action:event,note:note||'Assignment recorded',visibility});event+=' '+t.id;
  }

@@ -1,3 +1,8 @@
+## 2.0.2 - 2026-09-26
+- Added Head Analyst and Director roles
+- Added escalation workflow: Head Analyst -> Team lead -> Director, with notifications
+- Director has organization-wide read access but does not perform ticket transitions directly
+
 # Changelog
 
 ## 2.0.1 - 2026-09-26
