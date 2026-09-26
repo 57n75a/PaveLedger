@@ -1,3 +1,6 @@
+## 2.0.6 - 2026-09-26
+- Added a personal "My tickets" summary to the Overview page, showing status counts for cases you are personally assigned to, reported, or have completed/closed
+
 ## 2.0.5 - 2026-09-26
 - Archived tickets are now hidden from Overview, Investigations, and Analytics
 - Added a dedicated Archive section in the sidebar, visible only to Admin, Team lead, and Director
