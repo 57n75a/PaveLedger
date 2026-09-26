@@ -21,16 +21,17 @@ export function applyAction(s:State,m:Member,actual:Member,body:Record<string,un
   requireRole(['Admin']);const name=short.parse(body.name);if(s.teams.some(x=>x.toLowerCase()===name.toLowerCase()))throw new AppError('A team with that name already exists.');s.teams.push(name);event='Team created: '+name;
  }else if(action==='member'||action==='memberUpdate'){
   requireRole(['Admin']);if(actual.id!==m.id)throw new AppError('Return to your own administrator identity before changing access.',403);
-  const v=z.object({name:short,email:z.string().trim().email().max(250).transform(x=>x.toLowerCase()),role:z.enum(roles as [typeof roles[number],...typeof roles[number][]]),team:z.string().max(150),contractor:z.string().max(150),authUserId:z.string().uuid(),active:z.boolean()}).parse(body);
+  const v=z.object({name:short,email:z.string().trim().email().max(250).transform(x=>x.toLowerCase()),role:z.enum(roles as [typeof roles[number],...typeof roles[number][]]),team:z.string().max(150),contractor:z.string().max(150),vehicleTag:z.string().max(150),authUserId:z.string().uuid(),active:z.boolean()}).parse(body);
   const existing=action==='memberUpdate'?s.members.find(x=>x.id===body.memberId):undefined;if(action==='memberUpdate'&&!existing)throw new AppError('Member not found.');
   if(s.members.some(x=>x.id!==existing?.id&&(x.email.toLowerCase()===v.email||x.authUserId===v.authUserId)))throw new AppError('Email or authentication user ID already has a membership.');
   if(['Team lead','Analyst','Reviewer'].includes(v.role)&&!s.teams.includes(v.team))throw new AppError('Choose an existing team.');
   if(v.role==='Contractor'&&!s.contracts.some(x=>x.contractor===v.contractor))throw new AppError('Choose an existing contractor firm.');
+  if(v.role==='Vehicle'&&!v.vehicleTag.trim())throw new AppError('Enter a vehicle tag (e.g. Truck-07).');
   if(existing&&(existing.id===actual.id||existing.id===ownerId)&&(v.role!==existing.role||v.active!==isActive(existing)||v.authUserId!==(existing.authUserId||existing.id)))throw new AppError('Your own access and the designated owner identity cannot be demoted, suspended or rebound here.');
   if(existing?.role==='Admin'&&(v.role!=='Admin'||!v.active)&&s.members.filter(x=>x.role==='Admin'&&isActive(x)).length<=1)throw new AppError('Keep at least one active administrator.');
   if(existing&&(!v.active||v.role!=='Analyst'||v.team!==existing.team)&&s.tickets.some(t=>t.analyst===existing.id&&!closed(t)))throw new AppError('Reassign this member’s open investigations before changing their access or team.');
   if(existing&&existing.authUserId&&existing.authUserId!==v.authUserId)throw new AppError('An existing account binding cannot be replaced. Create a new membership and suspend the old one.');
-  const clean={...v,team:['Team lead','Analyst','Reviewer','Admin'].includes(v.role)?v.team:'',contractor:v.role==='Contractor'?v.contractor:'',demo:false};
+  const clean={...v,team:['Team lead','Analyst','Reviewer','Admin'].includes(v.role)?v.team:'',contractor:v.role==='Contractor'?v.contractor:'',vehicleTag:v.role==='Vehicle'?v.vehicleTag:'',demo:false};
   if(existing)Object.assign(existing,clean);else s.members.push({id:crypto.randomUUID(),...clean});
   event=`Membership ${existing?'updated':'created'}: ${v.name}; role ${v.role}; active ${v.active}`;
  }else{
