@@ -14,7 +14,6 @@ export async function POST(req:Request){try{
  const c=await context(req);
  if(c.member.role!=='Vehicle')throw new AppError('This endpoint is for registered vehicle accounts only.',403);
  const form=await req.formData();
- if(Number(form.get('revision'))!==c.row.revision)throw new AppError('Workspace changed; retry.',409);
  const v=z.object({road:z.string().trim().min(1).max(150),lat:z.coerce.number().min(-90).max(90),lng:z.coerce.number().min(-180).max(180),accuracy:z.coerce.number().positive().max(1000),lane:z.string().trim().min(1).max(100),capturedAt:z.string().datetime(),confidence:z.coerce.number().min(0).max(1)}).parse(Object.fromEntries(form));
  const file=form.get('file');if(!(file instanceof File)||file.size<12||file.size>3_000_000)throw new AppError('Choose a JPEG, PNG or WebP file up to 3 MB.');
  const bytes=Buffer.from(await file.arrayBuffer());let mime='';if(bytes[0]===255&&bytes[1]===216&&bytes[2]===255)mime='image/jpeg';else if(bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])))mime='image/png';else if(bytes.subarray(0,4).toString()==='RIFF'&&bytes.subarray(8,12).toString()==='WEBP')mime='image/webp';if(!mime)throw new AppError('File contents are not a supported image.');
