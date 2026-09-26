@@ -1,3 +1,9 @@
+## 2.0.4 - 2026-09-26
+- Added archive as a flag (not a status): tickets are never deleted, only archived
+- Admin, Team lead, and Director can archive/unarchive directly from the ticket page
+- Analyst and Head Analyst can request archival, which notifies Team lead/Director/Admin
+- Note: archived tickets still appear in the main dashboard for now -- hiding them and adding a dedicated Archive view is next
+
 ## 2.0.3 - 2026-09-26
 - Fixed: creating a non-Vehicle member (e.g. Admin) incorrectly required a vehicleTag field
 
