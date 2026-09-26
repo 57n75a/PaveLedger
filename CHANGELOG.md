@@ -1,3 +1,6 @@
+## 2.0.3 - 2026-09-26
+- Fixed: creating a non-Vehicle member (e.g. Admin) incorrectly required a vehicleTag field
+
 ## 2.0.2 - 2026-09-26
 - Added Head Analyst and Director roles
 - Added escalation workflow: Head Analyst -> Team lead -> Director, with notifications

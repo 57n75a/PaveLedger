@@ -21,7 +21,7 @@ export function applyAction(s:State,m:Member,actual:Member,body:Record<string,un
   requireRole(['Admin']);const name=short.parse(body.name);if(s.teams.some(x=>x.toLowerCase()===name.toLowerCase()))throw new AppError('A team with that name already exists.');s.teams.push(name);event='Team created: '+name;
  }else if(action==='member'||action==='memberUpdate'){
   requireRole(['Admin']);if(actual.id!==m.id)throw new AppError('Return to your own administrator identity before changing access.',403);
-  const v=z.object({name:short,email:z.string().trim().email().max(250).transform(x=>x.toLowerCase()),role:z.enum(roles as [typeof roles[number],...typeof roles[number][]]),team:z.string().max(150),contractor:z.string().max(150),vehicleTag:z.string().max(150),authUserId:z.string().uuid(),active:z.boolean()}).parse(body);
+  const v=z.object({name:short,email:z.string().trim().email().max(250).transform(x=>x.toLowerCase()),role:z.enum(roles as [typeof roles[number],...typeof roles[number][]]),team:z.string().max(150),contractor:z.string().max(150),vehicleTag:z.string().max(150).optional().transform(x=>x?.trim()||''),authUserId:z.string().uuid(),active:z.boolean()}).parse(body);
   const existing=action==='memberUpdate'?s.members.find(x=>x.id===body.memberId):undefined;if(action==='memberUpdate'&&!existing)throw new AppError('Member not found.');
   if(s.members.some(x=>x.id!==existing?.id&&(x.email.toLowerCase()===v.email||x.authUserId===v.authUserId)))throw new AppError('Email or authentication user ID already has a membership.');
   if(['Team lead','Analyst','Reviewer','Head Analyst'].includes(v.role)&&!s.teams.includes(v.team))throw new AppError('Choose an existing team.');
