@@ -61,6 +61,9 @@ export function applyAction(s:State,m:Member,actual:Member,body:Record<string,un
    }
    if(next==='Reopened'){t.reopened++;t.due=new Date(Date.parse(now)+86400000).toISOString();visibility='shared';}
    t.status=next as Status;event=t.status;if(t.analyst)s.notifications.unshift({id:crypto.randomUUID(),recipient:t.analyst,ticket:t.id,text:`Status changed: ${t.road} is now ${next}`,at:now});
+  }else if(action==='priority'){
+   if(!isActive(m)||m.role==='Auditor')throw new AppError('This action is not permitted for your role.',403);
+   const sev=z.enum(['Urgent','Standard','Low']).parse(body.severity);t.severity=sev;event='Priority set to '+sev;
   }else if(action==='note'){requireRole(['Admin','Team lead','Analyst','Reviewer','Contractor']);noteField.parse(note);event='Note added';}
   else throw new AppError('Unknown action.');
   t.updated=now;t.history.push({at:now,actor,action:event,note:note||'Assignment recorded',visibility});event+=' '+t.id;
