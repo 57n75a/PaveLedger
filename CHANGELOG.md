@@ -1,3 +1,7 @@
+## 2.1.6 - 2026-09-27
+- Admin can now delete a team directly from the Teams page (blocked if it still has active members or open investigations)
+- Admin can now add or remove members from a team directly from the Teams page, without going through Roles
+
 ## 2.1.5 - 2026-09-27
 - Teams page now reuses the same card styling as Contracts, for visual consistency across the app
 - Admin can now rename a team; the rename cascades to every member and ticket assigned to that team
