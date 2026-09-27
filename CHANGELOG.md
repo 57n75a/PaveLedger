@@ -1,3 +1,16 @@
+## 2.1.3 - 2026-09-27
+- Split "Teams & access" into two separate sidebar sections: Teams (team list, create team) and Roles (member table, edit access)
+
+## 2.1.2 - 2026-09-27
+- Overview now features a live "top priority case" hero with the real reported photo, instead of a static illustration
+- Contractor assignment on a ticket now explains clearly when no matching contract exists for that road
+- Contracts can now be edited: update details, add notes, upload documents, and link existing incidents on the same road
+
+## 2.1.1 - 2026-09-27
+- Added contractUpdate action: Admin can edit an existing contract's details and notes
+- Added contract document storage (reuses the private evidence bucket under a contracts/ path) with a new /api/contract-document endpoint
+- Editing a contract can now link existing incidents on the same road directly to it
+
 ## 2.1.0 - 2026-09-27
 - Added a global search bar in the top header covering investigations, contracts, and evidence
 - Added a "My profile" dialog: edit display name and change password (email locked)

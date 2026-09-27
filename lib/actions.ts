@@ -17,6 +17,14 @@ export function applyAction(s:State,m:Member,actual:Member,body:Record<string,un
   requireRole(['Admin']);const v=z.object({contractor:short,road:short,scope:z.string().trim().min(10).max(2000),start:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),end:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),poc:short,email:z.string().trim().email().max(250)}).parse(body);
   if(v.end<v.start||[v.start,v.end].some(x=>!Number.isFinite(Date.parse(x))||new Date(x).toISOString().slice(0,10)!==x))throw new AppError('Enter valid warranty start and end dates.');
   const id='CT-'+crypto.randomUUID().slice(0,8).toUpperCase();s.contracts.push({...v,id});event='Contract registered: '+id;
+ }else if(action==='contractUpdate'){
+  requireRole(['Admin']);const contractId=short.parse(body.contractId);const existing=s.contracts.find(x=>x.id===contractId);if(!existing)throw new AppError('Contract not found.');
+  const v=z.object({contractor:short,road:short,scope:z.string().trim().min(10).max(2000),start:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),end:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),poc:short,email:z.string().trim().email().max(250),notes:z.string().max(4000).optional().transform(x=>x?.trim()||'')}).parse(body);
+  if(v.end<v.start||[v.start,v.end].some(x=>!Number.isFinite(Date.parse(x))||new Date(x).toISOString().slice(0,10)!==x))throw new AppError('Enter valid warranty start and end dates.');
+  Object.assign(existing,v);
+  const linkIds=Array.isArray(body.linkTicketIds)?body.linkTicketIds as string[]:[];
+  for(const tid of linkIds){const lt=s.tickets.find(x=>x.id===tid);if(lt&&lt.road===existing.road){lt.contractor=existing.contractor;lt.contractId=existing.id;if(lt.warranty==='Needs review')lt.warranty='Candidate match';lt.updated=now;}}
+  event='Contract updated: '+existing.id;
  }else if(action==='team'){
   requireRole(['Admin']);const name=short.parse(body.name);if(s.teams.some(x=>x.toLowerCase()===name.toLowerCase()))throw new AppError('A team with that name already exists.');s.teams.push(name);event='Team created: '+name;
  }else if(action==='member'||action==='memberUpdate'){
