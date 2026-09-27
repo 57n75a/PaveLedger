@@ -1,3 +1,6 @@
+## 2.1.4 - 2026-09-27
+- Reformatted the Teams page into a clean card grid (previously plain unstyled text)
+
 ## 2.1.3 - 2026-09-27
 - Split "Teams & access" into two separate sidebar sections: Teams (team list, create team) and Roles (member table, edit access)
 
