@@ -1,3 +1,7 @@
+## 2.1.8 - 2026-09-27
+- Added phone number field to the member form, and phone/address/country fields to contract create and edit forms
+- New tickets now default to a live Google Maps embed of the reported location (free, no API key) instead of the logo, until a photo is uploaded
+
 ## 2.1.7 - 2026-09-27
 - Added phone number field for members and contracts
 - Added address and country/region fields for contracts
