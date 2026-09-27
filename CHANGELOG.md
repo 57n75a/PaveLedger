@@ -1,3 +1,7 @@
+## 2.1.5 - 2026-09-27
+- Teams page now reuses the same card styling as Contracts, for visual consistency across the app
+- Admin can now rename a team; the rename cascades to every member and ticket assigned to that team
+
 ## 2.1.4 - 2026-09-27
 - Reformatted the Teams page into a clean card grid (previously plain unstyled text)
 
