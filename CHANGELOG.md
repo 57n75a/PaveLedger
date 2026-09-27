@@ -1,3 +1,10 @@
+## 2.1.0 - 2026-09-27
+- Added a global search bar in the top header covering investigations, contracts, and evidence
+- Added a "My profile" dialog: edit display name and change password (email locked)
+- Added a 24-hour session timeout for all roles except Vehicle, which never expires
+- Added a Notification preferences dialog under Notifications
+- Team lead and Director can now see and edit any member's access from the Teams & access page (except granting/modifying Administrator access)
+
 ## 2.0.9 - 2026-09-27
 - Added self-service profile name updates (email still locked)
 - Added configurable notification preferences: assignment and status-change on by default, manual-edit notifications off by default
