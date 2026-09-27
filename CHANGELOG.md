@@ -1,3 +1,9 @@
+## 2.0.9 - 2026-09-27
+- Added self-service profile name updates (email still locked)
+- Added configurable notification preferences: assignment and status-change on by default, manual-edit notifications off by default
+- Team lead now gets notified when they personally assign a ticket
+- Team lead and Director can now edit any member's access and see all members org-wide, but cannot grant or modify Administrator access
+
 ## 2.0.8 - 2026-09-26
 - Contractor is now shown as a column on the dashboard and assignable directly from the ticket page (Admin, Team lead)
 - Archive/unarchive/request-archive controls moved to the bottom of each investigation
