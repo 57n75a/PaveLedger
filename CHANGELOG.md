@@ -1,3 +1,8 @@
+## 2.1.7 - 2026-09-27
+- Added phone number field for members and contracts
+- Added address and country/region fields for contracts
+- Schema prepared for a future interactive scope-radius picker (Leaflet, free/no API key)
+
 ## 2.1.6 - 2026-09-27
 - Admin can now delete a team directly from the Teams page (blocked if it still has active members or open investigations)
 - Admin can now add or remove members from a team directly from the Teams page, without going through Roles
