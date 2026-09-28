@@ -40,7 +40,7 @@ export default function AccessGate({ children }: { children: ReactNode }) {
   return <main className="access-page"><section className="access-card">
     <img src="/logo.png" width="270" height="91" alt="PaveLedger" />
     <p className="eyebrow">ROAD OPERATIONS</p><h1>Sign in to your workspace</h1>
-    <p className="muted">Investigations, repair responsibility, and the next action in one place.</p>
+    <p className="muted">Tickets, repair responsibility, and the next action in one place.</p>
     {loading ? <p role="status">Checking your session…</p> : <form className="form" onSubmit={signIn}>
       <label>Email<input name="email" type="email" autoComplete="username" required /></label>
       <label>Password<input name="password" type="password" autoComplete="current-password" required /></label>

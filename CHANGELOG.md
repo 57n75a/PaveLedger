@@ -1,3 +1,7 @@
+## 2.2.1 - 2026-09-28
+- Renamed "Investigations" to "Tickets" everywhere users see it: sidebar, page titles, buttons, dialogs, filters, search, exports, and messages
+- Internal code names (types, variables, API fields) are unchanged
+
 ## 2.2.0 - 2026-09-27
 - Add member form now shows team checkboxes (up to 3) instead of a single team dropdown
 - Team management, assignment pickers, and Teams page member counts all updated for multi-team membership

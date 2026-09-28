@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "PaveLedger | Road intelligence",
-  description: "Road safety investigations and repair accountability. Private demonstration.",
+  description: "Road safety tickets and repair accountability. Private demonstration.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
