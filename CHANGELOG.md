@@ -1,3 +1,11 @@
+## 2.2.0 - 2026-09-27
+- Add member form now shows team checkboxes (up to 3) instead of a single team dropdown
+- Team management, assignment pickers, and Teams page member counts all updated for multi-team membership
+
+## 2.1.9 - 2026-09-27
+- Members can now belong to up to 3 teams instead of just one
+- Existing single-team members are automatically migrated to the new teams array on next load
+
 ## 2.1.8 - 2026-09-27
 - Added phone number field to the member form, and phone/address/country fields to contract create and edit forms
 - New tickets now default to a live Google Maps embed of the reported location (free, no API key) instead of the logo, until a photo is uploaded
