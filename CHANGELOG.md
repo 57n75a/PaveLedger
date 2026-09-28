@@ -1,3 +1,8 @@
+## 2.2.2 - 2026-09-28
+- Contracts can now define a scope area: locate the address on a map, drag the pin, and set a coverage radius (Leaflet + OpenStreetMap, no API key)
+- Added a server-side address lookup limited to the selected region (USA, Canada, Europe), Admin only
+- Contract cards now show phone, address, and scope area with an Open in Google Maps link
+
 ## 2.2.1 - 2026-09-28
 - Renamed "Investigations" to "Tickets" everywhere users see it: sidebar, page titles, buttons, dialogs, filters, search, exports, and messages
 - Internal code names (types, variables, API fields) are unchanged

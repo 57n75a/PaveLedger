@@ -2,6 +2,7 @@ import { z } from 'zod';
 import {canSee,permitted,isActive,closed,eligibleVerification,roles,wantsNotification,type State,type Member,type Ticket,type Status} from './domain.ts';
 export class AppError extends Error {status:number;constructor(message:string,status=400){super(message);this.status=status}}
 const short=z.string().trim().min(1).max(150),noteField=z.string().trim().min(10).max(2000);
+const optCoord=(min:number,max:number)=>z.preprocess(x=>x===''||x==null?null:Number(x),z.number().min(min).max(max).nullable());
 export function applyAction(s:State,m:Member,actual:Member,body:Record<string,unknown>,now:string,ownerId:string){
  const actor=actual.name+(m.id!==actual.id?` previewing ${m.name}`:'');
  const action=z.string().parse(body.action);const note=typeof body.note==='string'?body.note.trim().slice(0,2000):'';
@@ -14,12 +15,12 @@ export function applyAction(s:State,m:Member,actual:Member,body:Record<string,un
   const id=`PL-${now.slice(0,4)}-${crypto.randomUUID().slice(0,8).toUpperCase()}`;
   const t:Ticket={...v,id,severity:['Urgent','Standard','Low'].includes(String(body.severity))?String(body.severity):'Standard',status:'Detected',team:m.teams?.[0]||s.teams[0]||'',analyst:m.role==='Analyst'?m.id:'',contractor:'',warranty:'Needs review',source:'Manual report',confidence:0,created:now,updated:now,due:new Date(Date.parse(now)+86400000).toISOString(),reopened:0,observations:1,evidence:[],history:[{at:now,actor,action:'Detected',note:v.note,visibility:'internal'}]};s.tickets.unshift(t);event='Created '+id;
  }else if(action==='contract'){
-  requireRole(['Admin']);const v=z.object({contractor:short,road:short,scope:z.string().trim().min(10).max(2000),start:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),end:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),poc:short,email:z.string().trim().email().max(250),phone:z.string().max(40).optional().transform(x=>x?.trim()||''),address:z.string().max(300).optional().transform(x=>x?.trim()||''),addressCountry:z.string().max(50).optional().transform(x=>x?.trim()||'')}).parse(body);
+  requireRole(['Admin']);const v=z.object({contractor:short,road:short,scope:z.string().trim().min(10).max(2000),start:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),end:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),poc:short,email:z.string().trim().email().max(250),scopeLat:optCoord(-90,90),scopeLng:optCoord(-180,180),scopeRadius:optCoord(50,50000),phone:z.string().max(40).optional().transform(x=>x?.trim()||''),address:z.string().max(300).optional().transform(x=>x?.trim()||''),addressCountry:z.string().max(50).optional().transform(x=>x?.trim()||'')}).parse(body);
   if(v.end<v.start||[v.start,v.end].some(x=>!Number.isFinite(Date.parse(x))||new Date(x).toISOString().slice(0,10)!==x))throw new AppError('Enter valid warranty start and end dates.');
   const id='CT-'+crypto.randomUUID().slice(0,8).toUpperCase();s.contracts.push({...v,id});event='Contract registered: '+id;
  }else if(action==='contractUpdate'){
   requireRole(['Admin']);const contractId=short.parse(body.contractId);const existing=s.contracts.find(x=>x.id===contractId);if(!existing)throw new AppError('Contract not found.');
-  const v=z.object({contractor:short,road:short,scope:z.string().trim().min(10).max(2000),start:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),end:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),poc:short,email:z.string().trim().email().max(250),notes:z.string().max(4000).optional().transform(x=>x?.trim()||''),phone:z.string().max(40).optional().transform(x=>x?.trim()||''),address:z.string().max(300).optional().transform(x=>x?.trim()||''),addressCountry:z.string().max(50).optional().transform(x=>x?.trim()||'')}).parse(body);
+  const v=z.object({contractor:short,road:short,scope:z.string().trim().min(10).max(2000),start:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),end:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),poc:short,email:z.string().trim().email().max(250),notes:z.string().max(4000).optional().transform(x=>x?.trim()||''),scopeLat:optCoord(-90,90),scopeLng:optCoord(-180,180),scopeRadius:optCoord(50,50000),phone:z.string().max(40).optional().transform(x=>x?.trim()||''),address:z.string().max(300).optional().transform(x=>x?.trim()||''),addressCountry:z.string().max(50).optional().transform(x=>x?.trim()||'')}).parse(body);
   if(v.end<v.start||[v.start,v.end].some(x=>!Number.isFinite(Date.parse(x))||new Date(x).toISOString().slice(0,10)!==x))throw new AppError('Enter valid warranty start and end dates.');
   Object.assign(existing,v);
   const linkIds=Array.isArray(body.linkTicketIds)?body.linkTicketIds as string[]:[];
