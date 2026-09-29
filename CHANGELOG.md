@@ -1,3 +1,18 @@
+## 2.3.1 - 2026-09-29
+- Every ticket's hero is now a live map centered on its coordinates (Overview and the individual ticket page); reported photos appear as thumbnails below instead
+- Evidence photos now show as real clickable thumbnails linking to the full image, instead of a filename-only button
+- Manually creating a ticket now looks up latitude/longitude automatically once you finish typing the road
+- Contract address country list is now USA, Canada, Serbia, EU
+
+## 2.3.0 - 2026-09-29
+- Vehicle re-check: when the original vehicle finds the location clear at least 12 hours later, the ticket moves to pending closure, the assigned team is notified, and it auto-closes and archives after 7 days (daily sweep; any manual stage change or a new detection cancels it)
+- New vehicle tickets resolve the street name from the GPS fix; the vehicle no longer has to send it
+- Vehicle detections inside an open ticket's 20 m radius are matched by location only
+- Contract coverage now uses the scope area when a contract has one, otherwise road name (abbreviation tolerant)
+- Address lookup allows Admin, Team lead and Analyst, is country-optional, and biases toward the workspace area
+- Added a batch thumbnail-URL endpoint for ticket images
+- Added Serbia and EU region codes for address lookup
+
 ## 2.2.2 - 2026-09-28
 - Contracts can now define a scope area: locate the address on a map, drag the pin, and set a coverage radius (Leaflet + OpenStreetMap, no API key)
 - Added a server-side address lookup limited to the selected region (USA, Canada, Europe), Admin only
