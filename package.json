@@ -1,6 +1,6 @@
 {
   "name": "paveledger-vercel",
-  "version": "2.3.2",
+  "version": "2.4.1",
   "private": true,
   "engines": {
     "node": "22.x"

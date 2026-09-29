@@ -1,3 +1,12 @@
+## 2.4.1 - 2026-09-30
+- "Users and Roles" is now two tabs: Users (the member list, renamed from "members" throughout) and Roles (the new live capability matrix)
+- Admin can toggle role capabilities directly in the Roles tab; changes save immediately per checkbox
+
+## 2.4.0 - 2026-09-30
+- Added a configurable role-capability system: Admin can now toggle, per role, whether it can create tickets, comment, assign, escalate, archive directly, and manage contracts
+- A fixed safety floor is not configurable: granting or modifying Administrator access, closing/verifying tickets, and team create/rename/delete remain hard-coded regardless of the capability matrix
+- Defaults exactly match prior hard-coded behavior, so nothing changes until an Admin customizes something
+
 ## 2.3.2 - 2026-09-29
 - Stand-alone comments on a ticket's activity are now restricted to team members and Admin (Contractor can still comment when moving a stage they're permitted to, since that comment is part of the transition itself)
 - Renamed the "Roles" section to "Users and Roles"
