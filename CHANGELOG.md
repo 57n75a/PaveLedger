@@ -1,3 +1,7 @@
+## 2.3.2 - 2026-09-29
+- Stand-alone comments on a ticket's activity are now restricted to team members and Admin (Contractor can still comment when moving a stage they're permitted to, since that comment is part of the transition itself)
+- Renamed the "Roles" section to "Users and Roles"
+
 ## 2.3.1 - 2026-09-29
 - Every ticket's hero is now a live map centered on its coordinates (Overview and the individual ticket page); reported photos appear as thumbnails below instead
 - Evidence photos now show as real clickable thumbnails linking to the full image, instead of a filename-only button
