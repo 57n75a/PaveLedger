@@ -1,3 +1,14 @@
+## 2.4.3 - 2026-09-30
+- Fixed: edit dialogs (users, contracts) could overflow the screen on desktop with the Save button unreachable; every dialog now scrolls internally instead
+- Contract create/edit forms no longer require the scope description; it's now a free-form optional field (e.g. cross-street description) alongside the map radius
+- Contract cards now show the contractor's name as the heading, with the road as a subheading
+- "Rename team" is now "Edit team"
+- The main Tickets dashboard now has a stage-change dropdown per row for straightforward transitions; stages needing extra details (Notice prepared, Duplicate, Verified closed) open the full ticket instead
+
+## 2.4.2 - 2026-09-30
+- Fixed: contract scope field was requiring 10+ characters even when a map radius already defined coverage; it's now optional
+- Only an Admin can create or modify a Vehicle account (Team lead/Director can still manage other roles)
+
 ## 2.4.1 - 2026-09-30
 - "Users and Roles" is now two tabs: Users (the member list, renamed from "members" throughout) and Roles (the new live capability matrix)
 - Admin can toggle role capabilities directly in the Roles tab; changes save immediately per checkbox
