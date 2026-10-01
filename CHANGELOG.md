@@ -1,3 +1,10 @@
+## 2.5.2 - 2026-10-02
+- Added a light/dark theme toggle in the topbar, persisted per browser
+- Admin can edit the sidebar logo and slogan from a new "Edit branding" link
+
+## 2.5.1 - 2026-10-02
+- Added editable branding: Admin can replace the sidebar logo (stored inline, under 500 KB) and change the workspace slogan
+
 ## 2.5.0 - 2026-10-01
 - Added PDF export alongside CSV export on the Tickets dashboard (client-side, no server cost)
 - Fixed the CSV export filename (was still PaveLedger_Investigations.csv)
