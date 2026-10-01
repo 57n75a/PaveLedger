@@ -1,3 +1,7 @@
+## 2.5.0 - 2026-10-01
+- Added PDF export alongside CSV export on the Tickets dashboard (client-side, no server cost)
+- Fixed the CSV export filename (was still PaveLedger_Investigations.csv)
+
 ## 2.4.3 - 2026-09-30
 - Fixed: edit dialogs (users, contracts) could overflow the screen on desktop with the Save button unreachable; every dialog now scrolls internally instead
 - Contract create/edit forms no longer require the scope description; it's now a free-form optional field (e.g. cross-street description) alongside the map radius
