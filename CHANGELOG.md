@@ -1,3 +1,10 @@
+## 2.6.1 - 2026-10-02
+- The topbar now shows the signed-in user's name/photo/status with a dropdown (Edit profile, Sign out) instead of a bare Sign out button
+- My profile now includes a status message (with presets: In office, Work from home, On vacation, Out sick, Do not disturb), phone number, profile photo, and self-service email change (sends a confirmation link)
+
+## 2.6.0 - 2026-10-02
+- Added self-service status message, phone number, and profile photo (stored inline, under 500 KB) to the self-profile action
+
 ## 2.5.2 - 2026-10-02
 - Added a light/dark theme toggle in the topbar, persisted per browser
 - Admin can edit the sidebar logo and slogan from a new "Edit branding" link
