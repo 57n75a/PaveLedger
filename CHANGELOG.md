@@ -1,3 +1,9 @@
+## 2.8.1 - 2026-10-04
+- Added "Import contracts" (Admin): upload XLSX/XLS/CSV or XML, map columns to contract fields (auto-guessed), review and select rows, then import. PDF shows a message suggesting conversion to CSV first, since reliable automatic PDF table extraction isn't realistic across arbitrary government formats.
+
+## 2.8.0 - 2026-10-04
+- Added bulkImportContracts action: validates each row with the same rules as a single contract, skips invalid rows rather than failing the whole batch, capped at 200 per import
+
 ## 2.7.1 - 2026-10-04
 - Contract create/edit forms now have a company logo upload and an "additional streets covered" field
 - Contract cards display the logo and any additional streets

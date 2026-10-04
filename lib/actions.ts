@@ -28,6 +28,23 @@ export function applyAction(s:State,m:Member,actual:Member,body:Record<string,un
   const linkIds=Array.isArray(body.linkTicketIds)?body.linkTicketIds as string[]:[];
   for(const tid of linkIds){const lt=s.tickets.find(x=>x.id===tid);if(lt&&contractCovers(existing,lt)){lt.contractor=existing.contractor;lt.contractId=existing.id;if(lt.warranty==='Needs review')lt.warranty='Candidate match';lt.updated=now;}}
   event='Contract updated: '+existing.id;
+ }else if(action==='bulkImportContracts'){
+  if(!isActive(m)||!roleCan(s,m.role,'contracts'))throw new AppError('This action is not permitted for your role.',403);
+  const items=Array.isArray(body.items)?body.items:[];
+  if(!items.length)throw new AppError('No contracts to import.');
+  if(items.length>200)throw new AppError('Import up to 200 contracts at a time.');
+  const importSchema=z.object({contractor:short,road:short,scope:z.string().trim().max(2000).optional().transform(x=>x?.trim()||''),start:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),end:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),poc:short,email:z.string().trim().email().max(250),phone:z.string().max(40).optional().transform(x=>x?.trim()||''),address:z.string().max(300).optional().transform(x=>x?.trim()||''),addressCountry:z.string().max(50).optional().transform(x=>x?.trim()||'')});
+  let created=0,skipped=0;
+  for(const raw of items){
+   const parsed=importSchema.safeParse(raw);
+   if(!parsed.success){skipped++;continue}
+   const iv=parsed.data;
+   if(iv.end<iv.start){skipped++;continue}
+   const id='CT-'+crypto.randomUUID().slice(0,8).toUpperCase();
+   s.contracts.push({...iv,id});
+   created++;
+  }
+  event='Bulk imported '+created+' contract(s)'+(skipped?', skipped '+skipped+' invalid row(s)':'');
  }else if(action==='team'){
   requireRole(['Admin']);const name=short.parse(body.name);if(s.teams.some(x=>x.toLowerCase()===name.toLowerCase()))throw new AppError('A team with that name already exists.');s.teams.push(name);event='Team created: '+name;
  }else if(action==='teamUpdate'){
