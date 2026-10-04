@@ -1,3 +1,17 @@
+## 2.7.1 - 2026-10-04
+- Contract create/edit forms now have a company logo upload and an "additional streets covered" field
+- Contract cards display the logo and any additional streets
+
+## 2.7.0 - 2026-10-04
+- Contracts can now have a company logo (inline, under 500 KB) and additional streets covered beyond the primary road
+- contractCovers now matches a ticket's road against any additional street listed, not just the primary one
+
+## 2.6.3 - 2026-10-04
+- Team cards now show the team logo and contact email/phone when set, and the Edit team form lets Admin set all three
+
+## 2.6.2 - 2026-10-04
+- Teams can now have a logo, contact email, and phone number, set via Edit team; carried over correctly if the team is renamed, cleaned up if deleted
+
 ## 2.6.1 - 2026-10-02
 - The topbar now shows the signed-in user's name/photo/status with a dropdown (Edit profile, Sign out) instead of a bare Sign out button
 - My profile now includes a status message (with presets: In office, Work from home, On vacation, Out sick, Do not disturb), phone number, profile photo, and self-service email change (sends a confirmation link)
