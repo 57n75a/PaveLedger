@@ -1,3 +1,8 @@
+## 2.8.5 - 2026-10-05
+- Custom roles (backend): Admin can create, edit and delete roles with a base role, a visibility setting (base, own, team, all) and capability checkboxes.
+- Memberships can be assigned a custom role; the member keeps the base role for workflow rules.
+- Capability checks (create, comment, assign, escalate, archive, contracts) now use the custom role when a member has one.
+
 ## 2.8.4 - 2026-10-05
 - Fix: map tiles were blocked by OpenStreetMap because no Referer header was sent. Referrer-Policy is now strict-origin-when-cross-origin (only the site origin is sent to other sites).
 - Map attribution now links to the OpenStreetMap copyright page, as the tile policy requires.
