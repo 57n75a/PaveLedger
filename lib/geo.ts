@@ -4,7 +4,13 @@ const UA='PaveLedger/2 (paveledger@gmail.com)';
 const EU='at,be,bg,hr,cy,cz,dk,ee,fi,fr,de,gr,hu,ie,it,lv,lt,lu,mt,nl,pl,pt,ro,sk,si,es,se';
 export const COUNTRY_CODES:Record<string,string>={USA:'us',CAN:'ca',SRB:'rs',EU:EU,Europe:EU};
 
-async function nominatim(path:string,params:URLSearchParams,timeoutMs:number){
+let nextSlot=0;
+const sleep=(ms:number)=>new Promise<void>(r=>setTimeout(r,ms));
+// Nominatim policy: at most 1 request per second. Space requests out on this server instance;
+// if the queue is already more than 8 seconds long, give up so callers fall back instead of hanging.
+async function gate(){const now=Date.now();const start=Math.max(now,nextSlot);if(start-now>8000)throw new Error('busy');nextSlot=start+1100;if(start>now)await sleep(start-now)}
+
+async function nominatim(path:string,params:URLSearchParams,timeoutMs:number){await gate();
  const ctl=new AbortController();
  const timer=setTimeout(()=>ctl.abort(),timeoutMs);
  try{return await fetch('https://nominatim.openstreetmap.org/'+path+'?'+params.toString(),{headers:{'User-Agent':UA,'Accept-Language':'en'},cache:'no-store',signal:ctl.signal})}

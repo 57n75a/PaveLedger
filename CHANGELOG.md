@@ -1,3 +1,11 @@
+## 2.8.7 - 2026-10-05
+- Roles tab: Admin can add, edit and delete custom roles (base role, visibility, allowed actions).
+- User form: custom roles appear in the Role dropdown; the Users table shows the custom role name.
+- Users: Admin can delete a user. Blocked for yourself, the owner identity, the last active Admin, and anyone who appears in ticket records (suspend them instead).
+
+## 2.8.6 - 2026-10-05
+- Street and address lookups are now spaced at least 1.1 seconds apart per server instance, to follow the OpenStreetMap Nominatim usage policy.
+
 ## 2.8.5 - 2026-10-05
 - Custom roles (backend): Admin can create, edit and delete roles with a base role, a visibility setting (base, own, team, all) and capability checkboxes.
 - Memberships can be assigned a custom role; the member keeps the base role for workflow rules.
