@@ -1,3 +1,8 @@
+## 2.8.2 - 2026-10-05
+- Security: only an Admin can modify an existing Vehicle account (previously a Team lead or Director could change or deactivate one by submitting a different role).
+- Audit: role-permission and branding changes are now written to the event log.
+- Safety: branding and profile-photo updates now respect the 8 MB workspace size limit.
+
 ## 2.8.1 - 2026-10-04
 - Added "Import contracts" (Admin): upload XLSX/XLS/CSV or XML, map columns to contract fields (auto-guessed), review and select rows, then import. PDF shows a message suggesting conversion to CSV first, since reliable automatic PDF table extraction isn't realistic across arbitrary government formats.
 
