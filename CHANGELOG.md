@@ -1,3 +1,9 @@
+## 2.8.3 - 2026-10-05
+- Account menu now has Settings, Notifications, Theme, Help, FAQ and Logout.
+- New FAQ dialog with 22 entries.
+- Logout clears stored session state and returns to the start page.
+- Tickets with no tagged contractor now read "No contractor" instead of "Unassigned".
+
 ## 2.8.2 - 2026-10-05
 - Security: only an Admin can modify an existing Vehicle account (previously a Team lead or Director could change or deactivate one by submitting a different role).
 - Audit: role-permission and branding changes are now written to the event log.
