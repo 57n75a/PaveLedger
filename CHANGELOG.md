@@ -1,3 +1,7 @@
+## 2.8.4 - 2026-10-05
+- Fix: map tiles were blocked by OpenStreetMap because no Referer header was sent. Referrer-Policy is now strict-origin-when-cross-origin (only the site origin is sent to other sites).
+- Map attribution now links to the OpenStreetMap copyright page, as the tile policy requires.
+
 ## 2.8.3 - 2026-10-05
 - Account menu now has Settings, Notifications, Theme, Help, FAQ and Logout.
 - New FAQ dialog with 22 entries.

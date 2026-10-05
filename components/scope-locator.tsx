@@ -26,7 +26,7 @@ export default function ScopeLocator({initialLat,initialLng,initialRadius}:{init
    lib.current=L;
    const start=latest.current;
    const m=L.map(box.current,{scrollWheelZoom:false}).setView(start?[start.lat,start.lng]:[39.5,-40],start?14:2);
-   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(m);
+   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',referrerPolicy:'strict-origin-when-cross-origin'}).addTo(m);
    m.on('click',(e:any)=>setScope({lat:e.latlng.lat,lng:e.latlng.lng,radius:latest.current?.radius||DEFAULT_RADIUS}));
    map.current=m;
    observer.current=new ResizeObserver(()=>m.invalidateSize());
