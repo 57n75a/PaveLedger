@@ -81,7 +81,7 @@ export default function ContractImport({mutate,busy,onDone}:{mutate:(b:any)=>Pro
 
  return <div className="form">
   <label>Source file (XLSX, XLS, CSV, or XML)<input type="file" accept=".xlsx,.xls,.csv,.xml" onChange={e=>{const f=e.target.files?.[0];if(f)handleFile(f)}}/></label>
-  {fileKind==='pdf'&&<p className="footnote">PDF structured import isn't supported \u2014 PDF layouts vary too much to map reliably. Convert the file to XLSX or CSV first, or enter these contracts manually.</p>}
+  {fileKind==='pdf'&&<p className="footnote">PDF structured import isn't supported — PDF layouts vary too much to map reliably. Convert the file to XLSX or CSV first, or enter these contracts manually.</p>}
   {rows.length>0&&<>
    <h3>Map columns</h3>
    {FIELDS.map(f=><label key={f.key}>{f.label}{f.required?' *':''}<select value={mapping[f.key]||''} onChange={e=>setMapping({...mapping,[f.key]:e.target.value})}><option value="">-- not mapped --</option>{columns.map(c=><option key={c} value={c}>{c}</option>)}</select></label>)}
@@ -89,7 +89,7 @@ export default function ContractImport({mutate,busy,onDone}:{mutate:(b:any)=>Pro
    <div style={{maxHeight:240,overflowY:'auto',border:'1px solid #e5e7eb',borderRadius:8}}>
     {rows.map((r,i)=><label key={i} className="check" style={{display:'flex',gap:8,padding:'6px 10px',borderBottom:'1px solid #f0f1f3'}}>
       <input type="checkbox" checked={selected.has(i)} onChange={e=>{const s=new Set(selected);if(e.target.checked)s.add(i);else s.delete(i);setSelected(s)}}/>
-      <span>{mapping.contractor?String(r[mapping.contractor]):'(contractor not mapped)'} \u2014 {mapping.road?String(r[mapping.road]):'(road not mapped)'}</span>
+      <span>{mapping.contractor?String(r[mapping.contractor]):'(contractor not mapped)'} — {mapping.road?String(r[mapping.road]):'(road not mapped)'}</span>
     </label>)}
    </div>
    <button className="primary" disabled={busy||!selected.size} onClick={doImport}>Import {selected.size} contract{selected.size===1?'':'s'}</button>

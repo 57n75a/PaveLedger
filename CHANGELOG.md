@@ -1,3 +1,6 @@
+## 2.8.8 - 2026-10-06
+- Fix: the contract scope line and the contract import screen showed raw "\u00b7" and "\u2014" text instead of a dot and a dash.
+
 ## 2.8.7 - 2026-10-05
 - Roles tab: Admin can add, edit and delete custom roles (base role, visibility, allowed actions).
 - User form: custom roles appear in the Role dropdown; the Users table shows the custom role name.
