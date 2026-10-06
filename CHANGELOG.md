@@ -1,3 +1,11 @@
+## 2.8.10 - 2026-10-06
+- Escalation chain is now configurable by an Admin (Users and Roles, Roles tab). The default is still Head Analyst, then Team lead, then Director.
+- The Escalate button on a ticket follows the chain and respects the role's Escalate tickets permission.
+- Escalation notices go to the target role; team-scoped roles are notified only within the ticket's team.
+
+## 2.8.9 - 2026-10-06
+- Branding editor moved from the sidebar to the account menu (Platform settings: branding), shown to Admin only. The logo and slogan still display for everyone.
+
 ## 2.8.8 - 2026-10-06
 - Fix: the contract scope line and the contract import screen showed raw "\u00b7" and "\u2014" text instead of a dot and a dash.
 
