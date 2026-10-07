@@ -1,3 +1,9 @@
+## 2.8.11 - 2026-10-07
+- Users: when adding a user an Admin can create the sign-in with a temporary password (shown once), send an email invitation, or link an existing sign-in.
+- Users: Admin can reset another member's password (not their own, not the owner's). Delete now also removes the sign-in account.
+- Sign-in screen: invited users and users with a temporary password choose their own password at first sign-in; added a Forgot your password link.
+- FAQ: three new entries about adding users, forgotten passwords and removing access.
+
 ## 2.8.10 - 2026-10-06
 - Escalation chain is now configurable by an Admin (Users and Roles, Roles tab). The default is still Head Analyst, then Team lead, then Director.
 - The Escalate button on a ticket follows the chain and respects the role's Escalate tickets permission.
