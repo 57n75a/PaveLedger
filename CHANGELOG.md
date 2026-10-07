@@ -1,3 +1,9 @@
+## 2.8.12 - 2026-10-07
+- New User Profile page (open it from your name at the top right): profile details, status, phone, photo, password, email, notifications, theme, log out. Admin-only Platform settings with Edit branding.
+- New Help and FAQ page in the sidebar with search and the support form at the bottom. The Help, FAQ, Settings and Notification popups are gone.
+- The user menu now has a single action, User Profile. A user's status is shown in bold.
+- FAQ answers updated for the new locations; two new entries.
+
 ## 2.8.11 - 2026-10-07
 - Users: when adding a user an Admin can create the sign-in with a temporary password (shown once), send an email invitation, or link an existing sign-in.
 - Users: Admin can reset another member's password (not their own, not the owner's). Delete now also removes the sign-in account.
