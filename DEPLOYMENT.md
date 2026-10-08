@@ -38,3 +38,17 @@ Configure the Supabase Site URL and approved redirects for your final HTTPS doma
 ## Before operational use
 
 Run separate-account role checks, a complete repair/reopen cycle, private-file tests and a database-plus-Storage restore drill. The health endpoint is process liveness only. Source ZIPs do not contain live database contents. Migration from D1/ChatGPT identity needs a complete export and explicit account mapping.
+
+## Optional: scheduled auto-close
+Set `CRON_SECRET` to a long random value (for example the output of `openssl rand -hex 32`) for the Production environment in Vercel, then redeploy. The daily job in `vercel.json` calls `/api/auto-close` with it. Without the variable the job is refused.
+
+## Optional: sending email from the app
+Set `RESEND_API_KEY` so the Help form can send messages to support from inside the app. Without it the form opens the person's email app instead.
+- Until a domain is verified in Resend, only Resend's test sender works, and it can deliver only to the email address the Resend account was created with. Create the Resend account with the support mailbox, or set `SUPPORT_EMAIL` to the address you signed up with.
+- To send to other people, verify a sending domain in Resend and set `MAIL_FROM`, for example `PaveLedger <notices@yourdomain.com>`.
+- `SUPPORT_EMAIL` sets where support messages go (default `paveledger@gmail.com`).
+
+## Optional: contractor notice emails
+1. Verify a sending domain in Resend and set `MAIL_FROM` (for example `PaveLedger <notices@yourdomain.com>`) together with `RESEND_API_KEY`, then redeploy.
+2. An Admin can then turn on automatic contractor notice emails under User Profile, Platform settings. They are sent only after a person confirms the contract and scope and moves a case to Notice prepared.
+3. Staff can also email a prepared notice from the case. Failed emails can be retried by an Admin. Undelivered items are retried on the daily sweep (`CRON_SECRET` must be set).

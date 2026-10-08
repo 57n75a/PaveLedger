@@ -1,3 +1,13 @@
+## 2.8.14 - 2026-10-08
+- Contractor notice emails (off by default): an Admin can turn on automatic emails sent when a case reaches Notice prepared; staff can email a prepared notice from the case. Needs RESEND_API_KEY and MAIL_FROM.
+- At-most-once delivery with up to 3 attempts, an Admin retry button, a record on each case, and a daily retry.
+- Admin settings show recent notice emails and failures. Two new FAQ entries.
+
+## 2.8.13 - 2026-10-08
+- Help form: sends the message to support from inside the app when RESEND_API_KEY is set (limited to 3 messages per 10 minutes per person). Without the key it opens the email app as before.
+- Fix: when someone changes their sign-in email on the User Profile page, their membership email now follows automatically.
+- DEPLOYMENT.md documents CRON_SECRET, RESEND_API_KEY, MAIL_FROM and SUPPORT_EMAIL.
+
 ## 2.8.12 - 2026-10-07
 - New User Profile page (open it from your name at the top right): profile details, status, phone, photo, password, email, notifications, theme, log out. Admin-only Platform settings with Edit branding.
 - New Help and FAQ page in the sidebar with search and the support form at the bottom. The Help, FAQ, Settings and Notification popups are gone.

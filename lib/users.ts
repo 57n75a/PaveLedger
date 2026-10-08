@@ -60,3 +60,14 @@ export async function deleteMember(s:State,m:Member,actual:Member,memberId:strin
  if(loginId){try{await deps.deleteLogin(loginId);loginRemoved=true}catch{loginRemoved=false}}
  return {loginRemoved};
 }
+
+// Keep a membership's stored email in step with the verified sign-in email (changed from the profile page).
+// Returns true when the member was updated. Never creates a duplicate email.
+export function syncMemberEmail(s:State,member:Member,authEmail:string,now:string):boolean{
+ const email=authEmail.trim().toLowerCase();
+ if(!email||member.email.trim().toLowerCase()===email)return false;
+ if(s.members.some(x=>x.id!==member.id&&x.email.trim().toLowerCase()===email))return false;
+ member.email=email;
+ s.events.unshift({at:now,actor:'System',action:'Email updated for '+member.name+' after a sign-in email change'});
+ return true;
+}
