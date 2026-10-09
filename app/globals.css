@@ -150,3 +150,57 @@ body {
 .evidence-row small {color:#5c697b;font-size:14px;overflow-wrap:anywhere}
 .form select {background:white;border:1px solid #ced5df;border-radius:7px;padding:10px;color:#182437;width:100%;font:inherit}
 .form input[type=checkbox] {width:18px;height:18px;flex:none}
+
+/* ===== Modern page layout (cards, centered settings, roomier tables) and dark sidebar ===== */
+.settings-page{max-width:920px;margin:0 auto;display:grid;gap:20px}
+.settings-card{background:#fff;border:1px solid #e3e8ef;border-radius:14px;padding:26px 30px;box-shadow:0 1px 2px rgba(16,24,40,.04),0 6px 20px rgba(16,24,40,.03)}
+.settings-card .section-head{padding:0 0 2px}
+.settings-card .section-head h2{margin:0;font-size:1.1rem}
+.settings-card .section-head p{margin-top:5px}
+.settings-card .form{margin:18px 0 0;gap:18px}
+.settings-card .form.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px 22px}
+.settings-card .form.cols>button,.settings-card .form.cols>.button-row{grid-column:1/-1}
+.settings-card .form>button,.settings-card .form>.button-row{align-self:flex-start}
+.settings-card .form input,.settings-card .form textarea{padding:12px 13px;border-radius:8px}
+.settings-card .form .check{align-items:center;gap:12px;font-size:.9rem}
+.settings-card .form .check input{width:auto;flex:none;padding:0;margin:0}
+.settings-card .form.cols>button{justify-self:start}
+.content:has(.settings-page) .page-heading{max-width:920px;margin-left:auto;margin-right:auto}
+.settings-card .primary,.settings-card .secondary{border-radius:8px;padding:11px 18px}
+.settings-card .footnote{padding:12px 0 0}
+.profile-hero{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.profile-hero .who{display:flex;align-items:center;gap:20px;min-width:0}
+.profile-hero .avatar-xl{display:grid;place-items:center;flex:none;width:80px;height:80px;border-radius:50%;object-fit:cover;background:#e6ebf2;color:#27364c;font-size:32px;font-weight:700}
+.profile-hero h2{margin:0;font-size:1.4rem}
+.profile-hero .meta{margin:4px 0 0;color:#677488;font-size:.92rem}
+.profile-hero .status-line{margin:10px 0 0;font-size:.95rem}
+.roles-block{padding:8px 24px 28px;margin-top:10px;border-top:1px solid #e5e8ef}
+.roles-block .section-head{padding:20px 0 8px}
+.roles-block .form{max-width:680px;margin:14px 0 0}
+.roles-block ol{margin:0 0 14px;padding-left:22px}
+.roles-block .footnote{padding:10px 0 0}
+.panel [data-slot=tabs-list]{margin:20px 24px 6px}
+.panel [data-slot=tabs-content]>.footnote:first-child{padding-top:16px}
+.panel [data-slot=table-cell] .secondary{padding:7px 12px;font-size:.8rem;margin:2px 6px 2px 0}
+.panel [data-slot=table-cell]:last-child{white-space:normal}
+@media(max-width:700px){.settings-card{padding:20px 18px;border-radius:12px}.profile-hero .avatar-xl{width:64px;height:64px;font-size:26px}.panel [data-slot=tabs-list]{margin:14px 14px 4px}.roles-block{padding:6px 14px 22px}}
+
+/* dark mode: sidebar, new cards, popovers */
+[data-theme=dark]{--sidebar:#15171c;--sidebar-foreground:#dfe3ea;--sidebar-accent:#2a2f38;--sidebar-accent-foreground:#fff;--sidebar-border:#2c3038;--popover:#1d2026;--popover-foreground:#e7e9ec}
+[data-theme=dark] [data-sidebar=sidebar]{background:#15171c!important;color:#dfe3ea!important;border-color:#2c3038!important}
+[data-theme=dark] .app-sidebar a{color:inherit!important}
+[data-theme=dark] .app-sidebar .brand img{background:#f4f6f9;border-radius:10px;padding:6px 10px}
+[data-theme=dark] .workspace-label{color:#8d96a3!important}
+[data-theme=dark] .workspace-label strong{color:#e7e9ec!important}
+[data-theme=dark] .nav-count{background:#3a2229!important;color:#ffb3c0!important}
+[data-theme=dark] .sidebar-callout{border-color:#2c3038!important}
+[data-theme=dark] .sidebar-callout p{color:#9aa0a8!important}
+[data-theme=dark] .sidebar-callout a{color:#ff8da1!important}
+[data-theme=dark] .profile{border-color:#2c3038!important}
+[data-theme=dark] .profile .avatar,[data-theme=dark] .avatar-xl{background:#2a2f38!important;color:#e7e9ec!important}
+[data-theme=dark] .settings-card{background:#1d2026!important;border-color:#2c3038!important;box-shadow:none!important}
+[data-theme=dark] .profile-hero .meta{color:#9aa0a8!important}
+[data-theme=dark] .roles-block{border-color:#2c3038!important}
+[data-theme=dark] .secondary{background:#1d2026!important;border-color:#3a3f48!important;color:#e7e9ec!important}
+[data-theme=dark] .secondary:hover{background:#262a31!important}
+[data-theme=dark] .text-button{color:#ff8da1!important}

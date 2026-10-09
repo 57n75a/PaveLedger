@@ -1,0 +1,30 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {seed,normalizeState,canSee,type Member,type State} from '../lib/domain.ts';
+import {applyAction} from '../lib/actions.ts';
+const now='2026-10-09T12:00:00.000Z',owner='d226cfb5-73e3-41f2-8a21-d7721b3a40de';
+const note='Reviewed evidence and recorded the required next action.';
+const fixture=()=>{const s=normalizeState(seed(owner,'owner@example.test'));return {s,admin:s.members[0],lead:s.members.find(x=>x.role==='Team lead')!,analyst:s.members.find(x=>x.id==='demo-analyst')!,auditor:s.members.find(x=>x.role==='Auditor')!,t:s.tickets[0]}};
+const act=(s:State,who:Member,body:Record<string,unknown>)=>applyAction(s,who,who,body,now,owner);
+const reopen=(s:State,who:Member,id:string)=>act(s,who,{action:'transition',id,status:'Reopened',note});
+const archivedClosed=(t:{status:string,archived?:boolean,archiveRequested?:boolean,closedAt?:string,verification?:string})=>{t.status='Verified closed';t.archived=true;t.archiveRequested=true;t.closedAt='2026-10-01T10:00:00.000Z';t.verification='original review'};
+
+test('reopening an archived ticket brings it back out of the archive',()=>{const {s,admin,t}=fixture();archivedClosed(t);reopen(s,admin,t.id);assert.equal(t.status,'Reopened');assert.equal(t.archived,false);assert.equal(t.archiveRequested,false);assert.equal(t.reopened,1)});
+test('a team lead can reopen an archived ticket for their team',()=>{const {s,lead,t}=fixture();assert.ok(canSee(t,lead));archivedClosed(t);reopen(s,lead,t.id);assert.equal(t.status,'Reopened');assert.equal(t.archived,false)});
+test('reopening an archived ticket keeps its closure record and adds history',()=>{const {s,admin,t}=fixture();archivedClosed(t);const n=t.history.length;reopen(s,admin,t.id);assert.equal(t.verification,'original review');assert.equal(t.closedAt,'2026-10-01T10:00:00.000Z');assert.equal(t.history.length,n+1);assert.equal(t.history.at(-1)!.action,'Reopened')});
+test('an auditor still cannot reopen an archived ticket',()=>{const {s,auditor,t}=fixture();archivedClosed(t);assert.throws(()=>reopen(s,auditor,t.id));assert.equal(t.archived,true);assert.equal(t.status,'Verified closed')});
+test('other stage changes do not touch the archive flag',()=>{const {s,admin,t}=fixture();t.archived=true;t.status='Investigating';act(s,admin,{action:'transition',id:t.id,status:'On hold',note});assert.equal(t.archived,true)});
+
+const withRole=(over:Record<string,unknown>={})=>({action:'customRoleSave',name:'Field inspector',base:'Analyst',visibility:'team',caps:['comment'],...over});
+let n=0;
+const person=(roleName:string,over:Record<string,unknown>={})=>({action:'member',name:'Test Person',email:`del${++n}@example.test`,role:roleName,teams:['Central roads'],contractor:'',active:true,authUserId:crypto.randomUUID(),...over});
+const add=(s:State,admin:Member,roleName:string)=>{act(s,admin,person(roleName));return s.members.at(-1)!};
+const del=(s:State,who:Member,body:Record<string,unknown>)=>act(s,who,{action:'customRoleDelete',...body});
+
+test('a role nobody uses is deleted without choosing a replacement',()=>{const {s,admin}=fixture();act(s,admin,withRole());del(s,admin,{name:'Field inspector'});assert.equal(s.customRoles?.length,0);assert.match(s.events[0].action,/^Custom role deleted: Field inspector$/)});
+test('deleting a role in use needs a replacement',()=>{const {s,admin}=fixture();act(s,admin,withRole());add(s,admin,'Field inspector');assert.throws(()=>del(s,admin,{name:'Field inspector'}),/replacement role/);assert.equal(s.customRoles?.length,1)});
+test('members move to the base role when their custom role is deleted',()=>{const {s,admin}=fixture();act(s,admin,withRole());const a=add(s,admin,'Field inspector'),b=add(s,admin,'Field inspector');del(s,admin,{name:'Field inspector',reassignTo:'Analyst'});assert.equal(s.customRoles?.length,0);for(const m of [a,b]){assert.equal(m.role,'Analyst');assert.equal(m.customRole,undefined);assert.equal(m.visibility,undefined)}assert.match(s.events[0].action,/2 member\(s\) moved to Analyst/)});
+test('members can move to another custom role with the same base',()=>{const {s,admin}=fixture();act(s,admin,withRole());act(s,admin,withRole({name:'Site viewer',visibility:'all'}));const m=add(s,admin,'Field inspector');del(s,admin,{name:'Field inspector',reassignTo:'Site viewer'});assert.equal(m.customRole,'Site viewer');assert.equal(m.visibility,'all');assert.equal(m.role,'Analyst');assert.deepEqual(s.customRoles?.map(r=>r.name),['Site viewer'])});
+test('a replacement with a different base is refused and nothing changes',()=>{const {s,admin}=fixture();act(s,admin,withRole());act(s,admin,withRole({name:'Observer',base:'Auditor',visibility:'all'}));const m=add(s,admin,'Field inspector');assert.throws(()=>del(s,admin,{name:'Field inspector',reassignTo:'Observer'}),/same base/);assert.throws(()=>del(s,admin,{name:'Field inspector',reassignTo:'Reviewer'}),/same base/);assert.throws(()=>del(s,admin,{name:'Field inspector',reassignTo:'Field inspector'}),/same base/);assert.throws(()=>del(s,admin,{name:'Field inspector',reassignTo:'Nonexistent'}),/same base/);assert.equal(m.customRole,'Field inspector');assert.equal(s.customRoles?.length,2)});
+test('only an administrator can delete a custom role',()=>{const {s,admin,lead,analyst}=fixture();act(s,admin,withRole());assert.throws(()=>del(s,lead,{name:'Field inspector'}));assert.throws(()=>del(s,analyst,{name:'Field inspector'}));assert.equal(s.customRoles?.length,1)});
+test('deleting an unknown role is rejected',()=>{const {s,admin}=fixture();assert.throws(()=>del(s,admin,{name:'Ghost'}),/not found/i)});
+test('built-in roles cannot be deleted this way',()=>{const {s,admin}=fixture();assert.throws(()=>del(s,admin,{name:'Analyst'}),/not found/i);assert.throws(()=>del(s,admin,{name:'Admin'}),/not found/i)});

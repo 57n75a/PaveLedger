@@ -1,3 +1,9 @@
+## 2.8.15 - 2026-10-09
+- Fix: tickets can be reopened from the Archive. The stage dropdown there now works, and reopening takes the ticket out of the archive.
+- Roles: an Admin can delete a custom role that people still hold by moving them to a role with the same base. Built-in roles are unchanged.
+- Dark mode now applies to the sidebar and menus.
+- User Profile and Users and Roles pages: centered cards, aligned fields and buttons, spaced tabs.
+
 ## 2.8.14 - 2026-10-08
 - Contractor notice emails (off by default): an Admin can turn on automatic emails sent when a case reaches Notice prepared; staff can email a prepared notice from the case. Needs RESEND_API_KEY and MAIL_FROM.
 - At-most-once delivery with up to 3 attempts, an Admin retry button, a record on each case, and a daily retry.
