@@ -1,0 +1,17 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {parseCoordinates,formatCoordinates,mapsLink,streetFromAddress} from '../lib/geoinput.ts';
+const P=(s:string)=>parseCoordinates(s);
+
+test('Google Maps decimal pairs are read in several spellings',()=>{for(const s of ['43.360500, -80.314000','43.3605 -80.314','43.3605,-80.314','(43.3605, -80.314)','  [43.3605; -80.314]  ','43.3605\t-80.314'])assert.deepEqual(P(s),{lat:43.3605,lng:-80.314},s)});
+test('positive longitudes work (for example Serbia)',()=>{assert.deepEqual(P('43.8567, 21.4128'),{lat:43.8567,lng:21.4128})});
+test('values are rounded to six decimals',()=>{assert.deepEqual(P('43.36050049, -80.31400011'),{lat:43.360500,lng:-80.314})});
+test('degrees, minutes and seconds are converted',()=>{assert.deepEqual(P('43°21\'37.8"N 80°18\'50.4"W'),{lat:43.3605,lng:-80.314});assert.deepEqual(P('43°21′37.8″N 80°18′50.4″W'),{lat:43.3605,lng:-80.314});assert.deepEqual(P('33°51\'54.5"S 151°12\'35.8"E'),{lat:-33.865139,lng:151.209944})});
+test('longitude-first degree notation is put in the right order',()=>{assert.deepEqual(P('80°18\'50.4"W 43°21\'37.8"N'),{lat:43.3605,lng:-80.314})});
+test('decimals with hemisphere letters are read',()=>{for(const s of ['43.3605° N, 80.3140° W','43.3605N 80.314W','N 43.3605 W 80.314','80.314 W 43.3605 N'])assert.deepEqual(P(s),{lat:43.3605,lng:-80.314},s)});
+test('Google Maps links are read, preferring the exact pin',()=>{assert.deepEqual(P('https://www.google.com/maps/place/King+St+E/@43.3601,-80.3130,17z/data=!3m1!4b1'),{lat:43.3601,lng:-80.313});assert.deepEqual(P('https://www.google.com/maps/place/X/@43.3601,-80.3130,17z/data=!4m5!3m4!1s0x0:0x0!8m2!3d43.3605!4d-80.314'),{lat:43.3605,lng:-80.314});assert.deepEqual(P('https://maps.google.com/?q=43.3605,-80.314'),{lat:43.3605,lng:-80.314});assert.deepEqual(P('https://www.google.com/maps?q=43.3605%2C-80.314&z=17'),{lat:43.3605,lng:-80.314})});
+test('anything that is not a clear coordinate pair is rejected',()=>{for(const s of ['','   ','abc','43.3605','91, 10','43.3, 181','120.5, -80','8FW4V75V+8Q','43.3605, -80.314, 12','https://example.com/page'])assert.equal(P(s),null,JSON.stringify(s))});
+test('coordinates are formatted the way Google Maps shows them',()=>{assert.equal(formatCoordinates(43.3605,-80.314),'43.360500, -80.314000');assert.deepEqual(P(formatCoordinates(43.3605,-80.314)),{lat:43.3605,lng:-80.314})});
+test('the map link points at the exact position',()=>{assert.equal(mapsLink(43.3605,-80.314),'https://www.google.com/maps?q=43.3605,-80.314')});
+test('the street name is guessed from an address',()=>{assert.equal(streetFromAddress('123 King Street East, Waterloo, ON N2J 1P5'),'King Street East');assert.equal(streetFromAddress('12-14 Dundas Street, Cambridge'),'Dundas Street');assert.equal(streetFromAddress('45A Hespeler Road'),'Hespeler Road');assert.equal(streetFromAddress('  7 Water St.  , Kitchener'),'Water St.');assert.equal(streetFromAddress('King Street East'),'King Street East')});
+test('street names with the number after them work too',()=>{assert.equal(streetFromAddress('Knez Mihailova 12, Beograd'),'Knez Mihailova');assert.equal(streetFromAddress('Ulica Kralja Petra 12/3, Paraćin'),'Ulica Kralja Petra')});
+test('unit lines are skipped and empty input is safe',()=>{assert.equal(streetFromAddress('Unit 4, 123 King Street'),'King Street');assert.equal(streetFromAddress('Suite 200, 55 Water Street'),'Water Street');assert.equal(streetFromAddress(''),'');assert.equal(streetFromAddress(' , '),'')});

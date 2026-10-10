@@ -1,3 +1,9 @@
+## 2.8.16 - 2026-10-10
+- New ticket is now a full page with Location (full address, GPS coordinates as in Google Maps, find on map, current position, map preview), Details (issue, priority, observed time, source, team, description) and Photos (up to 10, uploaded as evidence).
+- Tickets show their address and Google Maps coordinates with Open in Google Maps and Copy; authorised staff can edit them (recorded in the activity log).
+- GPS input accepts decimals, degrees/minutes/seconds, N/S/E/W letters and Google Maps links.
+- FAQ updated.
+
 ## 2.8.15 - 2026-10-09
 - Fix: tickets can be reopened from the Archive. The stage dropdown there now works, and reopening takes the ticket out of the archive.
 - Roles: an Admin can delete a custom role that people still hold by moving them to a role with the same base. Built-in roles are unchanged.
