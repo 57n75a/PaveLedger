@@ -129,11 +129,10 @@ Add the domain in Vercel, follow the DNS values shown there, and update the Supa
 | Role | Read scope | Allowed work |
 | --- | --- | --- |
 | Admin | Whole workspace | Teams, contracts, memberships, assignment and workflow; independent closure rules still apply. |
-| Team lead | Their team’s cases | Assign within team, investigate, prepare notices and record progress; cannot verify closure. |
+| Head Analyst | Their teams’ cases | Assign within their teams, manage members, investigate, prepare notices, escalate, archive and record progress; cannot verify closure. Replaces the retired Team lead role. |
 | Analyst | Cases assigned to them | Create an owned manual report, investigate, confirm, prepare notices, add evidence and record progress; cannot verify closure. |
-| Reviewer | Their team’s cases | Add evidence/notes, hold/resume, independently verify closure or reopen; cannot assign or change access. |
 | Contractor | Released cases for their firm | Acknowledge, start repair, claim completion, add shared repair evidence and notes. Cannot close or reopen. |
-| Auditor | Whole workspace, read-only | Read cases, evidence and global audit. Cannot change workflow, upload or administer. |
+| Auditor | Whole workspace | Read cases, evidence and the global audit. Add evidence and notes, hold or resume, independently verify closure or reopen. Cannot assign, change access or administer. Replaces the retired Reviewer role. |
 
 Dashboards are calculated from the same filtered data returned by the server. Contractors receive only shared history and shared evidence. Their responses omit internal case notes and assigned analyst identifiers. Global audit events are limited to Admin and Auditor; membership emails and authentication IDs are limited to Admin.
 
@@ -160,7 +159,7 @@ A role preview is an administrator feature and can perform actions. The audit na
 | Acknowledged | Record contractor acknowledgement. This is a workflow entry, not an email receipt. |
 | Repair in progress | Track mobilization and work. No-warranty cases may progress here directly from Confirmed. |
 | Awaiting verification | Record the completion claim, claimant and timestamp. The issue is still open. |
-| Verified closed | An independent Admin or Reviewer accepts eligible repeat evidence and records an explicit clear-pass decision. |
+| Verified closed | An independent Admin or Auditor accepts eligible repeat evidence and records an explicit clear-pass decision. |
 
 ## Investigation practice
 
@@ -176,7 +175,7 @@ The colour-coded status label appears with text. Use status text for decisions a
 
 ## Independent closure gate
 
-The API permits Verified closed only from Awaiting verification and only for Admin or Reviewer. The real actor must differ from both the assigned analyst and the person who recorded the completion claim. Administrator preview cannot bypass this check.
+The API permits Verified closed only from Awaiting verification and only for Admin or Auditor. The real actor must differ from both the assigned analyst and the person who recorded the completion claim. Administrator preview cannot bypass this check.
 
 The selected attachment must have purpose = verification, visibility quality = clear, reported GPS accuracy no worse than 10 metres, a capture timestamp at or after completion, and the exact same lane label. Its distance from the case point must be within max(10 m, min(25 m, case accuracy + evidence accuracy)). These are prototype tolerances; field calibration is required.
 

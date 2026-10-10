@@ -5,7 +5,7 @@ export const runtime='nodejs';export const dynamic='force-dynamic';
 
 export async function GET(req:Request){try{
  const c=await context(req);
- if(!['Admin','Team lead','Analyst'].includes(c.member.role))throw new AppError('Not permitted to look up addresses.',403);
+ if(!['Admin','Head Analyst','Analyst'].includes(c.member.role))throw new AppError('Not permitted to look up addresses.',403);
  const url=new URL(req.url);
  const q=(url.searchParams.get('q')||'').trim();
  if(q.length<3||q.length>300)throw new AppError('Enter a fuller address.');

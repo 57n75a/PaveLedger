@@ -1,8 +1,8 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {seed,normalizeState,type Member,type State} from '../lib/domain.ts';
+import {seed,normalizeState,canSee,type Member,type State} from '../lib/domain.ts';
 import {applyAction} from '../lib/actions.ts';
 const now='2026-10-09T12:00:00.000Z',owner='d226cfb5-73e3-41f2-8a21-d7721b3a40de';
-const fixture=()=>{const s=normalizeState(seed(owner,'owner@example.test'));return {s,admin:s.members[0],lead:s.members.find(x=>x.role==='Team lead')!,analyst:s.members.find(x=>x.id==='demo-analyst')!,other:s.members.find(x=>x.id==='demo-analyst-2')!,contractor:s.members.find(x=>x.role==='Contractor')!,auditor:s.members.find(x=>x.role==='Auditor')!}};
+const fixture=()=>{const s=normalizeState(seed(owner,'owner@example.test'));return {s,admin:s.members[0],lead:s.members.find(x=>x.id==='demo-lead')!,analyst:s.members.find(x=>x.id==='demo-analyst')!,other:s.members.find(x=>x.id==='demo-analyst-2')!,contractor:s.members.find(x=>x.role==='Contractor')!,auditor:s.members.find(x=>x.role==='Auditor')!}};
 const act=(s:State,who:Member,body:Record<string,unknown>)=>applyAction(s,who,who,body,now,owner);
 const base={action:'create',road:'King Street East',title:'Pothole in travel lane',lat:43.3605,lng:-80.314,accuracy:5,lane:'Lane 1',note:'Deep pothole near the crosswalk, about 40 cm wide.'};
 const create=(s:State,who:Member,over:Record<string,unknown>={})=>{act(s,who,{...base,...over});return s.tickets[0]};
@@ -23,6 +23,6 @@ test('a closed case must be reopened before its location changes',()=>{const {s,
 test('coordinates must come as a pair and stay in range',()=>{const {s,admin}=fixture();const t=s.tickets[2];const lat=t.lat;assert.throws(()=>loc(s,admin,t.id,{lat:43.5}),/both/);assert.throws(()=>loc(s,admin,t.id,{lng:-80.5}),/both/);assert.throws(()=>loc(s,admin,t.id,{lat:95,lng:-80}));assert.throws(()=>loc(s,admin,t.id,{lat:43,lng:-200}));assert.throws(()=>loc(s,admin,t.id,{accuracy:0}));assert.equal(t.lat,lat)});
 test('an edit that changes nothing is refused and an unknown case is not found',()=>{const {s,admin}=fixture();const t=s.tickets[2];assert.throws(()=>loc(s,admin,t.id,{lat:t.lat,lng:t.lng,road:t.road}),/Nothing to change/);assert.throws(()=>loc(s,admin,'PL-0000',{address:'x'}),/not found/i)});
 test('the address can be cleared',()=>{const {s,admin}=fixture();const t=s.tickets[2];t.address='Old address';loc(s,admin,t.id,{address:''});assert.equal(t.address,'')});
-test('someone who can see a case but is not responsible for it cannot edit its location',()=>{const {s,admin}=fixture();const t=s.tickets[2];const reviewer=s.members.find(x=>x.role==='Reviewer')!;assert.ok(reviewer.teams.includes(t.team));assert.throws(()=>loc(s,reviewer,t.id,{address:'x'}),/not permitted/);
+test('someone who can see a case but is not responsible for it cannot edit its location',()=>{const {s,admin}=fixture();const t=s.tickets[2];const reviewer=s.members.find(x=>x.id==='demo-reviewer')!;assert.ok(canSee(t,reviewer));assert.throws(()=>loc(s,reviewer,t.id,{address:'x'}),/not permitted/);
 act(s,admin,{action:'customRoleSave',name:'Roaming analyst',base:'Analyst',visibility:'all',caps:['comment']});act(s,admin,{action:'member',name:'Roaming Person',email:'roam@example.test',role:'Roaming analyst',teams:['Central roads'],contractor:'',active:true,authUserId:crypto.randomUUID()});const roamer=s.members.at(-1)!;assert.notEqual(t.analyst,roamer.id);assert.throws(()=>loc(s,roamer,t.id,{address:'x'}),/not permitted/);assert.equal(t.address,undefined);
 t.analyst=roamer.id;loc(s,roamer,t.id,{address:'Now assigned to them'});assert.equal(t.address,'Now assigned to them')});

@@ -2,14 +2,14 @@ import test from 'node:test';import assert from 'node:assert/strict';
 import {seed,normalizeState,canSee,permitted,eligibleVerification,type Member,type Ticket,type Evidence} from '../lib/domain.ts';
 import {applyAction} from '../lib/actions.ts';
 const now='2026-09-25T19:00:00.000Z',owner='d226cfb5-73e3-41f2-8a21-d7721b3a40de';
-const fixture=()=>{const s=normalizeState(seed(owner,'owner@example.test'));for(const t of s.tickets)t.created='2026-09-24T19:00:00.000Z';return {s,admin:s.members[0],analyst:s.members.find(x=>x.id==='demo-analyst')!,reviewer:s.members.find(x=>x.role==='Reviewer')!,contractor:s.members.find(x=>x.role==='Contractor')!,auditor:s.members.find(x=>x.role==='Auditor')!,t:s.tickets[0]}};
+const fixture=()=>{const s=normalizeState(seed(owner,'owner@example.test'));for(const t of s.tickets)t.created='2026-09-24T19:00:00.000Z';return {s,admin:s.members[0],analyst:s.members.find(x=>x.id==='demo-analyst')!,reviewer:s.members.find(x=>x.id==='demo-reviewer')!,contractor:s.members.find(x=>x.role==='Contractor')!,auditor:s.members.find(x=>x.role==='Auditor')!,t:s.tickets[0]}};
 const note='Reviewed evidence and recorded the required next action.';
 function verification(t:Ticket):Evidence{return {id:'evidence-a',name:'repeat.png',mime:'image/png',bytes:400,sha256:'testhash',purpose:'verification',capturedAt:'2026-09-25T18:55:00.000Z',uploadedAt:now,uploadedBy:'reviewer',lat:t.lat,lng:t.lng,accuracy:3,lane:t.lane!,quality:'clear'}}
 test('analyst scope is assignment based',()=>{const {t,analyst}=fixture();assert.equal(canSee(t,analyst),false);t.analyst=analyst.id;assert.equal(canSee(t,analyst),true)});
-test('team lead cannot read another team',()=>{const {s}=fixture();const lead=s.members.find(x=>x.role==='Team lead')!;assert.equal(canSee(s.tickets.find(t=>!lead.teams.includes(t.team))!,lead),false)});
+test('team lead cannot read another team',()=>{const {s}=fixture();const lead=s.members.find(x=>x.id==='demo-lead')!;assert.equal(canSee(s.tickets.find(t=>!lead.teams.includes(t.team))!,lead),false)});
 test('contractor cannot read an unreleased candidate',()=>{const {t,contractor}=fixture();assert.equal(canSee(t,contractor),false);t.status='Notice prepared';assert.equal(canSee(t,contractor),true)});
 test('suspended members lose scope immediately',()=>{const {t,admin}=fixture();admin.active=false;assert.equal(canSee(t,admin),false)});
-test('auditor cannot transition',()=>{const {t,auditor}=fixture();assert.equal(permitted(auditor,t,'Team assigned'),false)});
+test('auditor cannot make routine stage changes',()=>{const {t,auditor}=fixture();assert.equal(permitted(auditor,t,'Team assigned'),false)});
 test('analyst cannot close a repair',()=>{const {t,analyst}=fixture();t.analyst=analyst.id;t.status='Awaiting verification';assert.equal(permitted(analyst,t,'Verified closed'),false)});
 test('contractor cannot close a repair',()=>{const {t,contractor}=fixture();t.status='Awaiting verification';assert.equal(permitted(contractor,t,'Verified closed'),false)});
 test('assignment produces notification',()=>{const {s,t,admin,analyst}=fixture();applyAction(s,admin,admin,{action:'assign',id:t.id,team:analyst.teams[0],analyst:analyst.id},now,owner);assert.equal(t.status,'Analyst assigned');assert.equal(s.notifications[0].recipient,analyst.id)});

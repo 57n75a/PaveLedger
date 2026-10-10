@@ -8,7 +8,7 @@ const key=(contract:string,id:string)=>`${workspaceId}/contracts/${contract}/${i
 
 export async function GET(req:Request){try{
  const c=await context(req);
- if(!['Admin','Team lead','Director','Auditor'].includes(c.member.role))throw new AppError('Not permitted.',403);
+ if(!['Admin','Head Analyst','Director','Auditor'].includes(c.member.role))throw new AppError('Not permitted.',403);
  const url=new URL(req.url),contract=c.state.contracts.find(x=>x.id===url.searchParams.get('contract'));
  if(!contract)throw new AppError('Contract unavailable.',404);
  const doc=contract.documents?.find(d=>d.id===url.searchParams.get('id'));

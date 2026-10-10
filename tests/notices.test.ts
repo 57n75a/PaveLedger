@@ -5,7 +5,7 @@ import {buildNotice,queueNotice,runOutbox,retryFailed,MAX_OUTBOX} from '../lib/o
 import type {MailMessage,MailResult} from '../lib/mail.ts';
 const now='2026-09-25T19:00:00.000Z',owner='d226cfb5-73e3-41f2-8a21-d7721b3a40de';
 const note='Reviewed evidence and recorded the required next action.';
-const fixture=()=>{const s=normalizeState(seed(owner,'owner@example.test'));for(const t of s.tickets)t.created='2026-09-24T19:00:00.000Z';return {s,admin:s.members[0],lead:s.members.find(x=>x.role==='Team lead')!,analyst:s.members.find(x=>x.id==='demo-analyst')!,contractor:s.members.find(x=>x.role==='Contractor')!,auditor:s.members.find(x=>x.role==='Auditor')!,t:s.tickets[0]}};
+const fixture=()=>{const s=normalizeState(seed(owner,'owner@example.test'));for(const t of s.tickets)t.created='2026-09-24T19:00:00.000Z';return {s,admin:s.members[0],lead:s.members.find(x=>x.id==='demo-lead')!,analyst:s.members.find(x=>x.id==='demo-analyst')!,contractor:s.members.find(x=>x.role==='Contractor')!,auditor:s.members.find(x=>x.role==='Auditor')!,t:s.tickets[0]}};
 const act=(s:State,who:Member,body:Record<string,unknown>)=>applyAction(s,who,who,body,now,owner);
 const prepare=(s:State,who:Member,t:Ticket)=>{t.status='Confirmed';act(s,who,{action:'transition',id:t.id,status:'Notice prepared',note,contract:s.contracts[0].id,scopeConfirmed:true})};
 const ok:MailResult={ok:true};

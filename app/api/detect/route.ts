@@ -19,7 +19,7 @@ function notifyTeam(s:State,t:Ticket,text:string,now:string){
  const recipients=new Set<string>();
  for(const m of s.members){
   if(!isActive(m))continue;
-  if(m.id===t.analyst||((m.teams||[]).includes(t.team)&&['Team lead','Head Analyst','Reviewer','Analyst'].includes(m.role)))recipients.add(m.id);
+  if(m.id===t.analyst||((m.teams||[]).includes(t.team)&&['Head Analyst','Analyst'].includes(m.role)))recipients.add(m.id);
  }
  for(const id of recipients){
   const m=s.members.find(x=>x.id===id);

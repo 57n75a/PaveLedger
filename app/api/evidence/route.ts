@@ -12,7 +12,7 @@ export async function POST(req:Request){try{
  const origin=req.headers.get('origin');if(origin&&origin!==new URL(req.url).origin)throw new AppError('Origin mismatch',403);
  if(Number(req.headers.get('content-length'))>3_300_000)throw new AppError('Use an image smaller than 3 MB.',413);
  const c=await context(req),form=await req.formData(),t=c.state.tickets.find(t=>t.id===form.get('ticket'));
- if(!t||!canSee(t,c.member)||!['Admin','Team lead','Analyst','Reviewer','Contractor'].includes(c.member.role))throw new AppError('Upload not permitted.',403);
+ if(!t||!canSee(t,c.member)||!['Admin','Head Analyst','Analyst','Auditor','Contractor'].includes(c.member.role))throw new AppError('Upload not permitted.',403);
  if(closed(t))throw new AppError('Reopen the case before adding evidence.');
  if(Number(form.get('revision'))!==c.row.revision)throw new AppError('Workspace changed; refresh before uploading.',409);
  if(form.get('authorized')!=='true')throw new AppError('Confirm the image is authorized and redacted for this case.');

@@ -12,7 +12,7 @@ A municipal road-investigation pilot using Next.js, Supabase Auth, PostgreSQL an
 
 ## Included
 
-- Server-enforced roles: Admin, Team lead, Analyst, Reviewer, Contractor and Auditor.
+- Server-enforced roles: Admin, Head Analyst, Analyst, Contractor, Auditor, Vehicle and Director.
 - Assignment notifications, investigation stages, warranty-scope review and prepared notices.
 - Private photo upload, internal/shared evidence and short-lived authorized downloads.
 - Independent closure checks, duplicate links, holds, reopening and case/audit history.

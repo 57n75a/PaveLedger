@@ -1,3 +1,14 @@
+## 2.8.18 - 2026-10-10
+- Pictures: profile photo, team logo, company logo and the main logo accept files up to 2 MB. They are resized in the browser before saving. Previously any picture over about 24 KB was refused by a hidden request limit.
+- Tables wrap their text and fit the window, so every column of the Users table is visible at 100% zoom.
+- Help and FAQ is now a centered card like the profile page.
+- New PaveLedger Srbija logo.
+
+## 2.8.17 - 2026-10-10
+- Roles: Team lead is retired, and Head Analyst has all of its permissions. Reviewer is retired, and Auditor has all of its permissions (verify and close repairs, reopen, hold and resume) while still reading every record.
+- Existing users, role settings, custom roles, escalation chains and escalated tickets are migrated automatically. The default escalation is Head Analyst, then Director.
+- Analysts can be added to more teams (up to three) while they have open tickets. Removing a team that still holds their open tickets, suspending them or changing their role still requires reassigning those tickets first.
+
 ## 2.8.16 - 2026-10-10
 - New ticket is now a full page with Location (full address, GPS coordinates as in Google Maps, find on map, current position, map preview), Details (issue, priority, observed time, source, team, description) and Photos (up to 10, uploaded as evidence).
 - Tickets show their address and Google Maps coordinates with Open in Google Maps and Copy; authorised staff can edit them (recorded in the activity log).

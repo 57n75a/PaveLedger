@@ -2,7 +2,7 @@ import test from 'node:test';import assert from 'node:assert/strict';
 import {seed,normalizeState,type Member,type State} from '../lib/domain.ts';
 import {provisionMember,resetMemberPassword,deleteMember,tempPassword,type LoginDeps} from '../lib/users.ts';
 const now='2026-10-05T12:00:00.000Z',owner='d226cfb5-73e3-41f2-8a21-d7721b3a40de';
-const fixture=()=>{const s=normalizeState(seed(owner,'owner@example.test'));return {s,admin:s.members[0],lead:s.members.find(x=>x.role==='Team lead')!,analyst:s.members.find(x=>x.id==='demo-analyst')!}};
+const fixture=()=>{const s=normalizeState(seed(owner,'owner@example.test'));return {s,admin:s.members[0],lead:s.members.find(x=>x.id==='demo-lead')!,analyst:s.members.find(x=>x.id==='demo-analyst')!}};
 function fakeDeps(over:Partial<LoginDeps>={}){
  const calls={create:[] as {email:string,password:string,mustChange:boolean}[],invite:[] as {email:string,mustChange:boolean}[],setPassword:[] as {id:string,password:string}[],del:[] as string[]};
  const deps:LoginDeps={
