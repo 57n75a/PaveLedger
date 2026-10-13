@@ -1,3 +1,10 @@
+## 2.9.0 - 2026-10-13
+- Serbian (Latin) is now the default language across the sign-in page, the workspace and the concept page. A flag next to your name in the top bar switches between Srpski and English; the choice is remembered on the device.
+- Statuses, roles, priorities, server messages, notifications and the activity log are shown in the chosen language. Stored data is unchanged, so existing records and integrations are unaffected.
+- Dates follow the chosen language. PDF exports use an embedded font so letters such as č, ć and đ print correctly.
+- Not translated yet: contractor notice emails and the downloadable draft notice stay in English.
+- Fix: the integration test fixtures now match their sign-in emails, so "analyst cannot change teams" passes again.
+
 ## 2.8.19 - 2026-10-13
 - Contracts: bulk import from XLSX, CSV or XML with column mapping and a review step before import.
 - Fix: the previous release would not build because the contract import was added to the workspace twice.

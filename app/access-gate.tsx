@@ -1,11 +1,12 @@
 'use client';
+import {tx,useLang,LangSwitch} from '@/lib/i18n';
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { browserClient } from '@/lib/supabase-browser';
 
 const MIN_PASSWORD = 8;
 
-export default function AccessGate({ children }: { children: ReactNode }) {
+export default function AccessGate({ children }: { children: ReactNode }) {useLang();
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -72,34 +73,34 @@ export default function AccessGate({ children }: { children: ReactNode }) {
   }
 
   if (session && !mustChange) return <div key={session.user.id}>{children}</div>;
-  return <main className="access-page"><section className="access-card">
-    <img src="/logo.png" width="270" height="91" alt="PaveLedger" />
-    <p className="eyebrow">ROAD OPERATIONS</p>
+  return <main className="access-page"><div className="access-lang"><LangSwitch/></div><section className="access-card">
+    <img src="/logo.png" width="270" height="91" alt={tx("PaveLedger")} />
+    <p className="eyebrow">{tx("ROAD OPERATIONS")}</p>
     {session && mustChange ? <>
-      <h1>Choose a new password</h1>
-      <p className="muted">{recovery ? 'Enter a new password for your account.' : 'Welcome. Choose your own password to continue.'}</p>
+      <h1>{tx("Choose a new password")}</h1>
+      <p className="muted">{tx(recovery ? 'Enter a new password for your account.' : 'Welcome. Choose your own password to continue.')}</p>
       <form className="form" onSubmit={setNewPassword}>
-        <label>New password<input name="password" type="password" autoComplete="new-password" minLength={MIN_PASSWORD} required /></label>
-        <label>Confirm new password<input name="confirm" type="password" autoComplete="new-password" minLength={MIN_PASSWORD} required /></label>
-        <button className="primary" disabled={busy}>{busy ? 'Saving…' : 'Save password and continue'}</button>
+        <label>{tx("New password")}<input name="password" type="password" autoComplete="new-password" minLength={MIN_PASSWORD} required /></label>
+        <label>{tx("Confirm new password")}<input name="confirm" type="password" autoComplete="new-password" minLength={MIN_PASSWORD} required /></label>
+        <button className="primary" disabled={busy}>{tx(busy ? 'Saving…' : 'Save password and continue')}</button>
       </form>
-      <button className="text-button" type="button" onClick={() => { setRecovery(false); void browserClient().auth.signOut(); }}>Sign out</button>
+      <button className="text-button" type="button" onClick={() => { setRecovery(false); void browserClient().auth.signOut(); }}>{tx("Sign out")}</button>
     </> : <>
-      <h1>{forgot ? 'Reset your password' : 'Sign in to your workspace'}</h1>
-      <p className="muted">{forgot ? 'Enter your email and we will send a reset link.' : 'Tickets, repair responsibility, and the next action in one place.'}</p>
-      {loading ? <p role="status">Checking your session…</p> : forgot ? <form className="form" onSubmit={requestReset}>
-        <label>Email<input name="email" type="email" autoComplete="username" required /></label>
-        <button className="primary" disabled={busy}>{busy ? 'Sending…' : 'Send reset link'}</button>
+      <h1>{tx(forgot ? 'Reset your password' : 'Sign in to your workspace')}</h1>
+      <p className="muted">{tx(forgot ? 'Enter your email and we will send a reset link.' : 'Tickets, repair responsibility, and the next action in one place.')}</p>
+      {loading ? <p role="status">{tx("Checking your session…")}</p> : forgot ? <form className="form" onSubmit={requestReset}>
+        <label>{tx("Email")}<input name="email" type="email" autoComplete="username" required /></label>
+        <button className="primary" disabled={busy}>{tx(busy ? 'Sending…' : 'Send reset link')}</button>
       </form> : <form className="form" onSubmit={signIn}>
-        <label>Email<input name="email" type="email" autoComplete="username" required /></label>
-        <label>Password<input name="password" type="password" autoComplete="current-password" required /></label>
-        <button className="primary" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
+        <label>{tx("Email")}<input name="email" type="email" autoComplete="username" required /></label>
+        <label>{tx("Password")}<input name="password" type="password" autoComplete="current-password" required /></label>
+        <button className="primary" disabled={busy}>{tx(busy ? 'Signing in…' : 'Sign in')}</button>
       </form>}
-      {!loading && <button className="text-button" type="button" onClick={() => { setForgot(!forgot); setError(''); setNotice(''); }}>{forgot ? 'Back to sign in' : 'Forgot your password?'}</button>}
+      {!loading && <button className="text-button" type="button" onClick={() => { setForgot(!forgot); setError(''); setNotice(''); }}>{tx(forgot ? 'Back to sign in' : 'Forgot your password?')}</button>}
     </>}
-    {notice && <p role="status" className="muted">{notice}</p>}
-    {error && <p role="alert" className="access-error">{error}</p>}
-    <p className="footnote">Access is provisioned by your workspace administrator. Contact them for a new account or password reset.</p>
-    <a className="text-button" href="/concept">Explore the platform</a>
+    {notice && <p role="status" className="muted">{tx(notice)}</p>}
+    {error && <p role="alert" className="access-error">{tx(error)}</p>}
+    <p className="footnote">{tx("Access is provisioned by your workspace administrator. Contact them for a new account or password reset.")}</p>
+    <a className="text-button" href="/concept">{tx("Explore the platform")}</a>
   </section></main>;
 }

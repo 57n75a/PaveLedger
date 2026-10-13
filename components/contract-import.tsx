@@ -1,4 +1,5 @@
 'use client';
+import {tx,useLang} from '@/lib/i18n';
 import {useState} from 'react';
 import * as XLSX from 'xlsx';
 import {toast} from 'sonner';
@@ -15,7 +16,7 @@ const FIELDS=[
  {key:'address',label:'Address',required:false},
 ];
 
-export default function ContractImport({mutate,busy,onDone}:{mutate:(b:any)=>Promise<boolean>,busy:boolean,onDone:()=>void}){
+export default function ContractImport({mutate,busy,onDone}:{mutate:(b:any)=>Promise<boolean>,busy:boolean,onDone:()=>void}){useLang();
  const [rows,setRows]=useState<Record<string,any>[]>([]);
  const [columns,setColumns]=useState<string[]>([]);
  const [mapping,setMapping]=useState<Record<string,string>>({});
@@ -43,12 +44,12 @@ export default function ContractImport({mutate,busy,onDone}:{mutate:(b:any)=>Pro
   if(name.endsWith('.xml')){
    const text=await file.text();
    const doc=new DOMParser().parseFromString(text,'application/xml');
-   if(doc.querySelector('parsererror')){toast.error('Could not parse this XML file');return}
+   if(doc.querySelector('parsererror')){toast.error(tx('Could not parse this XML file'));return}
    const counts=new Map<string,number>();
    doc.querySelectorAll('*').forEach(el=>{counts.set(el.tagName,(counts.get(el.tagName)||0)+1)});
    let recordTag='',max=1;
    counts.forEach((c,tag)=>{if(c>max){max=c;recordTag=tag}});
-   if(!recordTag){toast.error('Could not find repeated records in this XML file');return}
+   if(!recordTag){toast.error(tx('Could not find repeated records in this XML file'));return}
    const records=Array.from(doc.getElementsByTagName(recordTag));
    const extracted=records.map(rec=>{const obj:Record<string,any>={};Array.from(rec.children).forEach(child=>{obj[child.tagName]=child.textContent||''});return obj});
    const cols=Array.from(new Set(extracted.flatMap(r=>Object.keys(r))));
@@ -59,7 +60,7 @@ export default function ContractImport({mutate,busy,onDone}:{mutate:(b:any)=>Pro
   const wb=XLSX.read(buf,{type:'array'});
   const sheet=wb.Sheets[wb.SheetNames[0]];
   const json:Record<string,any>[]=XLSX.utils.sheet_to_json(sheet,{defval:''});
-  if(!json.length){toast.error('No rows found in this file');return}
+  if(!json.length){toast.error(tx('No rows found in this file'));return}
   const cols=Array.from(new Set(json.flatMap(r=>Object.keys(r))));
   setColumns(cols);setRows(json);setFileKind('table');setSelected(new Set(json.map((_,i)=>i)));autoMap(cols);
  }
@@ -75,24 +76,24 @@ export default function ContractImport({mutate,busy,onDone}:{mutate:(b:any)=>Pro
  async function doImport(){
   const items=buildItems();
   const missing=items.some(it=>FIELDS.some(f=>f.required&&!it[f.key]));
-  if(missing){toast.error('One or more selected rows are missing a required field (contractor, road, dates, point of contact, or email). Fix the mapping or deselect those rows.');return}
+  if(missing){toast.error(tx('One or more selected rows are missing a required field (contractor, road, dates, point of contact, or email). Fix the mapping or deselect those rows.'));return}
   if(await mutate({action:'bulkImportContracts',items}))onDone();
  }
 
  return <div className="form">
-  <label>Source file (XLSX, XLS, CSV, or XML)<input type="file" accept=".xlsx,.xls,.csv,.xml" onChange={e=>{const f=e.target.files?.[0];if(f)handleFile(f)}}/></label>
-  {fileKind==='pdf'&&<p className="footnote">PDF structured import isn't supported — PDF layouts vary too much to map reliably. Convert the file to XLSX or CSV first, or enter these contracts manually.</p>}
+  <label>{tx("Source file (XLSX, XLS, CSV, or XML)")}<input type="file" accept=".xlsx,.xls,.csv,.xml" onChange={e=>{const f=e.target.files?.[0];if(f)handleFile(f)}}/></label>
+  {fileKind==='pdf'&&<p className="footnote">{tx("PDF structured import isn't supported — PDF layouts vary too much to map reliably. Convert the file to XLSX or CSV first, or enter these contracts manually.")}</p>}
   {rows.length>0&&<>
-   <h3>Map columns</h3>
-   {FIELDS.map(f=><label key={f.key}>{f.label}{f.required?' *':''}<select value={mapping[f.key]||''} onChange={e=>setMapping({...mapping,[f.key]:e.target.value})}><option value="">-- not mapped --</option>{columns.map(c=><option key={c} value={c}>{c}</option>)}</select></label>)}
-   <h3>Preview ({selected.size} of {rows.length} selected)</h3>
+   <h3>{tx("Map columns")}</h3>
+   {FIELDS.map(f=><label key={f.key}>{tx(f.label)}{tx(f.required?' *':'')}<select value={mapping[f.key]||''} onChange={e=>setMapping({...mapping,[f.key]:e.target.value})}><option value="">{tx("-- not mapped --")}</option>{columns.map(c=><option key={c} value={c}>{tx(c)}</option>)}</select></label>)}
+   <h3>{tx("Preview ({0} of {1} selected)", [selected.size, rows.length])}</h3>
    <div style={{maxHeight:240,overflowY:'auto',border:'1px solid #e5e7eb',borderRadius:8}}>
     {rows.map((r,i)=><label key={i} className="check" style={{display:'flex',gap:8,padding:'6px 10px',borderBottom:'1px solid #f0f1f3'}}>
       <input type="checkbox" checked={selected.has(i)} onChange={e=>{const s=new Set(selected);if(e.target.checked)s.add(i);else s.delete(i);setSelected(s)}}/>
-      <span>{mapping.contractor?String(r[mapping.contractor]):'(contractor not mapped)'} — {mapping.road?String(r[mapping.road]):'(road not mapped)'}</span>
+      <span>{tx(mapping.contractor?String(r[mapping.contractor]):'(contractor not mapped)')} — {tx(mapping.road?String(r[mapping.road]):'(road not mapped)')}</span>
     </label>)}
    </div>
-   <button className="primary" disabled={busy||!selected.size} onClick={doImport}>Import {selected.size} contract{selected.size===1?'':'s'}</button>
+   <button className="primary" disabled={busy||!selected.size} onClick={doImport}>{tx("Import {0} contract{1}", [selected.size, tx(selected.size===1?'':'s')])}</button>
   </>}
  </div>;
 }

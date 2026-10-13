@@ -242,3 +242,4 @@ body {
 .settings-card details{padding:3px 0}
 .settings-card details summary{padding:4px 0}
 [data-theme=dark] .settings-card input[type=search]{background:#14161a!important;border-color:#3a3f48!important;color:#e7e9ec!important}
+.lang-switch{position:relative;display:inline-flex}.lang-menu{position:absolute;right:0;top:calc(100% + 6px);z-index:60;min-width:150px;background:#fff;border:1px solid #dfe5ed;border-radius:8px;box-shadow:0 10px 30px #15283c24;padding:4px}.lang-menu button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;padding:9px 10px;border-radius:5px;font-size:.85rem;color:#27364c;text-align:left}.lang-menu button:hover{background:#f2f5f9}.lang-menu button.active{font-weight:700}.access-lang{position:fixed;top:16px;right:16px;z-index:10}[data-theme=dark] .lang-menu{background:#1d2026;border-color:#2c3038}[data-theme=dark] .lang-menu button{color:#e7e9ec}[data-theme=dark] .lang-menu button:hover{background:#262a31}

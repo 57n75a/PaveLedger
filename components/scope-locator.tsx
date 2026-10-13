@@ -1,4 +1,5 @@
 'use client';
+import {tx,useLang} from '@/lib/i18n';
 import {useEffect,useRef,useState} from 'react';
 import 'leaflet/dist/leaflet.css';
 import {authorizedFetch} from '@/lib/supabase-browser';
@@ -8,7 +9,7 @@ type Scope={lat:number,lng:number,radius:number}|null;
 const DEFAULT_RADIUS=500;
 const fmt=(m:number)=>m>=1000?(m/1000).toFixed(1)+' km':Math.round(m)+' m';
 
-export default function ScopeLocator({initialLat,initialLng,initialRadius}:{initialLat?:number,initialLng?:number,initialRadius?:number}){
+export default function ScopeLocator({initialLat,initialLng,initialRadius}:{initialLat?:number,initialLng?:number,initialRadius?:number}){useLang();
  const box=useRef<HTMLDivElement>(null);
  const lib=useRef<any>(null),map=useRef<any>(null),marker=useRef<any>(null),circle=useRef<any>(null),observer=useRef<ResizeObserver|null>(null);
  const [ready,setReady]=useState(false),[busy,setBusy]=useState(false);
@@ -67,28 +68,28 @@ export default function ScopeLocator({initialLat,initialLng,initialRadius}:{init
   const fd=new FormData(form);
   const q=String(fd.get('address')||'').trim();
   const country=String(fd.get('addressCountry')||'USA');
-  if(!q){toast.error('Enter an address first');return}
+  if(!q){toast.error(tx('Enter an address first'));return}
   setBusy(true);
   try{
    const r=await authorizedFetch('/api/geocode?q='+encodeURIComponent(q)+'&country='+encodeURIComponent(country));
    const d=await r.json();
    if(!r.ok)throw new Error(d.error);
    setScope({lat:d.lat,lng:d.lng,radius:latest.current?.radius||DEFAULT_RADIUS});
-   toast.success('Address located');
-  }catch(e){toast.error((e as Error).message)}
+   toast.success(tx('Address located'));
+  }catch(e){toast.error(tx((e as Error).message))}
   finally{setBusy(false)}
  }
 
  return <div className="form">
-  <p className="footnote">Coverage area (optional): locate the address, then drag the pin or click the map to fine-tune, and set the radius this contract covers.</p>
-  <button type="button" className="secondary" disabled={busy} onClick={e=>locate(e.currentTarget)}>{busy?'Locating...':'Locate address on map'}</button>
+  <p className="footnote">{tx("Coverage area (optional): locate the address, then drag the pin or click the map to fine-tune, and set the radius this contract covers.")}</p>
+  <button type="button" className="secondary" disabled={busy} onClick={e=>locate(e.currentTarget)}>{tx(busy?'Locating...':'Locate address on map')}</button>
   <div ref={box} style={{height:260,width:'100%',borderRadius:8,overflow:'hidden',border:'1px solid #e5e7eb',isolation:'isolate'}}/>
   {scope?<>
-   <label>Scope radius: {fmt(scope.radius)}<input type="range" min={100} max={10000} step={50} value={Math.min(10000,Math.max(100,scope.radius))} onChange={e=>setScope({...scope,radius:Number(e.target.value)})}/></label>
+   <label>{tx("Scope radius: {0}", [tx(fmt(scope.radius))])}<input type="range" min={100} max={10000} step={50} value={Math.min(10000,Math.max(100,scope.radius))} onChange={e=>setScope({...scope,radius:Number(e.target.value)})}/></label>
    <input type="hidden" name="scopeLat" value={scope.lat.toFixed(6)}/>
    <input type="hidden" name="scopeLng" value={scope.lng.toFixed(6)}/>
    <input type="hidden" name="scopeRadius" value={Math.round(scope.radius)}/>
-   <button type="button" className="text-button" onClick={()=>setScope(null)}>Clear scope area</button>
-  </>:<p className="footnote">No scope area set.</p>}
+   <button type="button" className="text-button" onClick={()=>setScope(null)}>{tx("Clear scope area")}</button>
+  </>:<p className="footnote">{tx("No scope area set.")}</p>}
  </div>;
 }
