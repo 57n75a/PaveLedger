@@ -87,10 +87,13 @@ export function Flag({lang, size = 20}: {lang: Lang; size?: number}) {
 
 const NAMES: Record<Lang, string> = {sr: 'Srpski', en: 'English'};
 
-/** Flag button that opens a small language menu. */
+/** Language dropdown: the current flag with an arrow, and the flags stacked directly beneath it. Opens on hover (desktop) or tap. */
 export function LangSwitch() {
   const {lang, setLang} = useLang();
   const [open, setOpen] = useState(false);
+  const closeTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hoverable = () => typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
+  const cancelClose = () => { if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; } };
   useEffect(() => {
     if (!open) return;
     const close = () => setOpen(false);
@@ -98,9 +101,19 @@ export function LangSwitch() {
     window.addEventListener('click', close); window.addEventListener('keydown', key);
     return () => { window.removeEventListener('click', close); window.removeEventListener('keydown', key); };
   }, [open]);
-  return <div className="lang-switch" onClick={e => e.stopPropagation()}>
-    <button type="button" className="icon-btn" aria-haspopup="menu" aria-expanded={open} aria-label={lang === 'sr' ? 'Jezik: Srpski' : 'Language: English'} title={NAMES[lang]} onClick={() => setOpen(o => !o)}><Flag lang={lang}/></button>
-    {open && <div className="lang-menu" role="menu">{LANGS.map(l => <button key={l} type="button" role="menuitemradio" aria-checked={l === lang} className={l === lang ? 'active' : ''} onClick={() => { setLang(l); setOpen(false); }}><Flag lang={l}/><span>{NAMES[l]}</span></button>)}</div>}
+  useEffect(() => cancelClose, []);
+  // Current language first, then the others, one under the other.
+  const ordered = [lang, ...LANGS.filter(l => l !== lang)];
+  return <div className={'lang-switch' + (open ? ' open' : '')} onClick={e => e.stopPropagation()}
+    onMouseEnter={() => { if (hoverable()) { cancelClose(); setOpen(true); } }}
+    onMouseLeave={() => { if (hoverable()) { cancelClose(); closeTimer.current = setTimeout(() => setOpen(false), 150); } }}>
+    <button type="button" className="lang-trigger" aria-haspopup="listbox" aria-expanded={open} aria-label={lang === 'sr' ? 'Jezik: Srpski' : 'Language: English'} title={NAMES[lang]} onClick={() => (hoverable() ? setOpen(true) : setOpen(o => !o))}>
+      <Flag lang={lang} size={22}/>
+      <svg className="lang-caret" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+    </button>
+    {open && <ul className="lang-menu" role="listbox" aria-label={lang === 'sr' ? 'Jezik' : 'Language'}>{ordered.map(l => <li key={l} role="option" aria-selected={l === lang}>
+      <button type="button" className={l === lang ? 'active' : ''} title={NAMES[l]} aria-label={NAMES[l]} onClick={() => { setLang(l); setOpen(false); }}><Flag lang={l} size={22}/></button>
+    </li>)}</ul>}
   </div>;
 }
 

@@ -1,3 +1,6 @@
+## 2.9.1 - 2026-10-13
+- Language switch is now a compact dropdown: the current flag with an arrow, and the flags stacked one under the other directly beneath it. It opens on hover on desktop and on tap on phones.
+
 ## 2.9.0 - 2026-10-13
 - Serbian (Latin) is now the default language across the sign-in page, the workspace and the concept page. A flag next to your name in the top bar switches between Srpski and English; the choice is remembered on the device.
 - Statuses, roles, priorities, server messages, notifications and the activity log are shown in the chosen language. Stored data is unchanged, so existing records and integrations are unaffected.
