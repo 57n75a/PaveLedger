@@ -7,7 +7,8 @@ import {seed,normalizeState} from '../lib/domain.ts';
 console.log('Starting local integration service');
 const owner='d226cfb5-73e3-41f2-8a21-d7721b3a40de', analyst='a226cfb5-73e3-41f2-8a21-d7721b3a40de', contractor='c226cfb5-73e3-41f2-8a21-d7721b3a40de';
 let row={id:'integration',owner,revision:1,data:normalizeState(seed(owner,'owner@example.test'))};
-for(const [id,uid] of [['demo-analyst',analyst],['demo-contractor',contractor]]){Object.assign(row.data.members.find(m=>m.id===id),{demo:false,authUserId:uid});}
+// Emails match the mock sign-ins so membership email sync does not bump the revision mid-test.
+for(const [id,uid,email] of [['demo-analyst',analyst,'analyst@example.test'],['demo-contractor',contractor,'contractor@example.test']]){Object.assign(row.data.members.find(m=>m.id===id),{demo:false,authUserId:uid,email});}
 const m=row.data.members.find(m=>m.id==='demo-analyst');
 row.data.tickets[0].analyst=m.id;
 row.data.tickets[0].history.push({at:new Date().toISOString(),actor:'staff',action:'Note added',note:'INTERNAL CANARY',visibility:'internal'});
