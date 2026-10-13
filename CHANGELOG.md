@@ -1,3 +1,7 @@
+## 2.8.19 - 2026-10-13
+- Contracts: bulk import from XLSX, CSV or XML with column mapping and a review step before import.
+- Fix: the previous release would not build because the contract import was added to the workspace twice.
+
 ## 2.8.18 - 2026-10-10
 - Pictures: profile photo, team logo, company logo and the main logo accept files up to 2 MB. They are resized in the browser before saving. Previously any picture over about 24 KB was refused by a hidden request limit.
 - Tables wrap their text and fit the window, so every column of the Users table is visible at 100% zoom.
