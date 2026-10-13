@@ -1,3 +1,13 @@
+## 2.10.0 - 2026-10-13
+- Ticket timeline: every ticket shows seven steps from report to closure (Reported, Routed, Investigation, Contractor notice, Repair, Verification, Closed) with the date each was reached. Reopened, on-hold, rejected, duplicate and pending-closure tickets get a clear note.
+- Next step: each ticket says what should happen now and who does it. When it is your turn, one button opens the right form with the stage already chosen.
+- Tickets table: a progress bar under each stage shows how far the ticket has come.
+- New Connections page: an interactive graph of tickets, people, teams, roads, contracts and contractors and how they link. Click to focus, search, filter by type and open/closed, and open tickets from the graph. It only shows what your role can see.
+- Export for Neo4j: the graph downloads as Cypher statements (and JSON), ready for a later Neo4j sync.
+- Fix: Auditors can now verify, close, reopen and hold repairs from the ticket. The form was hidden from them since 2.8.17.
+- Fix: the Change stage menu in the Tickets table now sits inside the Stage column instead of shifting the row.
+- Two new FAQ entries.
+
 ## 2.9.1 - 2026-10-13
 - Language switch is now a compact dropdown: the current flag with an arrow, and the flags stacked one under the other directly beneath it. It opens on hover on desktop and on tap on phones.
 
