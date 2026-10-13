@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {escalationTarget,TEAM_SCOPED_ROLES,ESCALATION_ROLES,canSee,permitted,isActive,closed,eligibleVerification,roles,wantsNotification,contractCovers,roleCan,CAPABILITIES,type State,type Member,type Ticket,type Status} from './domain.ts';
 import {queueNotice,retryFailed} from './outbox.ts';
+import {checkRow,contractKey,MAX_IMPORT_ROWS} from './contract-schema.ts';
 export class AppError extends Error {status:number;constructor(message:string,status=400){super(message);this.status=status}}
 const short=z.string().trim().min(1).max(150),noteField=z.string().trim().min(10).max(2000);
 const optCoord=(min:number,max:number)=>z.preprocess(x=>x===''||x==null?null:Number(x),z.number().min(min).max(max).nullable());
@@ -36,19 +37,21 @@ export function applyAction(s:State,m:Member,actual:Member,body:Record<string,un
   if(!isActive(m)||!roleCan(s,m.customRole||m.role,'contracts'))throw new AppError('This action is not permitted for your role.',403);
   const items=Array.isArray(body.items)?body.items:[];
   if(!items.length)throw new AppError('No contracts to import.');
-  if(items.length>200)throw new AppError('Import up to 200 contracts at a time.');
-  const importSchema=z.object({contractor:short,road:short,scope:z.string().trim().max(2000).optional().transform(x=>x?.trim()||''),start:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),end:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),poc:short,email:z.string().trim().email().max(250),phone:z.string().max(40).optional().transform(x=>x?.trim()||''),address:z.string().max(300).optional().transform(x=>x?.trim()||''),addressCountry:z.string().max(50).optional().transform(x=>x?.trim()||'')});
-  let created=0,skipped=0;
+  if(items.length>MAX_IMPORT_ROWS)throw new AppError('Import up to 200 contracts at a time.');
+  const seenKeys=new Set(s.contracts.map(c=>contractKey(c)));
+  let created=0,skipped=0,duplicates=0;
   for(const raw of items){
-   const parsed=importSchema.safeParse(raw);
-   if(!parsed.success){skipped++;continue}
-   const iv=parsed.data;
-   if(iv.end<iv.start){skipped++;continue}
+   const {value}=checkRow(raw&&typeof raw==='object'?raw:{});
+   if(!value){skipped++;continue}
+   const k=contractKey(value);
+   if(seenKeys.has(k)){duplicates++;continue}
+   seenKeys.add(k);
+   const {scopeLat,scopeLng,scopeRadius,...rest}=value;
    const id='CT-'+crypto.randomUUID().slice(0,8).toUpperCase();
-   s.contracts.push({...iv,id});
+   s.contracts.push({...rest,id,...(scopeLat!==undefined?{scopeLat,scopeLng,scopeRadius}:{})});
    created++;
   }
-  event='Bulk imported '+created+' contract(s)'+(skipped?', skipped '+skipped+' invalid row(s)':'');
+  event='Bulk imported '+created+' contract(s)'+(skipped?', skipped '+skipped+' invalid row(s)':'')+(duplicates?', skipped '+duplicates+' duplicate(s)':'');
  }else if(action==='team'){
   requireRole(['Admin']);const name=short.parse(body.name);if(s.teams.some(x=>x.toLowerCase()===name.toLowerCase()))throw new AppError('A team with that name already exists.');s.teams.push(name);event='Team created: '+name;
  }else if(action==='teamUpdate'){

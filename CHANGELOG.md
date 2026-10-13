@@ -1,3 +1,12 @@
+## 2.11.0 - 2026-10-13
+- Contractor import schema: one shared set of rules for the import screen and the server, covering 15 columns (6 required), with formats, examples and guidelines shown in the import window.
+- Templates: Excel (with a Guidelines sheet), CSV (UTF-8) and XML, downloadable from the import window and from Help and FAQ. A JSON Schema is published at /schemas/contract-import.schema.json for automated exports; docs/CONTRACT_IMPORT.md is the reference.
+- Import now accepts extra streets, notes, country and a map area (latitude, longitude, radius), and dates as YYYY-MM-DD, DD.MM.YYYY or Excel dates. Ambiguous dates with slashes are rejected.
+- Every row is checked before saving and shows the reason when it fails; duplicates (same firm, road and warranty dates) are shown and skipped, including within the same file.
+- English and Serbian column headers are matched automatically (Izvođač, Ulica, Početak garancije, ...).
+- Fix: CSV dates such as 01.05.2026 were read as 5 January; CSV values are now read as written.
+- Help and FAQ: new section "Importing contractors and contracts" with 13 answers and template downloads; answers are grouped, and search now works in Serbian.
+
 ## 2.10.0 - 2026-10-13
 - Ticket timeline: every ticket shows seven steps from report to closure (Reported, Routed, Investigation, Contractor notice, Repair, Verification, Closed) with the date each was reached. Reopened, on-hold, rejected, duplicate and pending-closure tickets get a clear note.
 - Next step: each ticket says what should happen now and who does it. When it is your turn, one button opens the right form with the stage already chosen.

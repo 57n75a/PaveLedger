@@ -17,6 +17,7 @@ A municipal road-investigation pilot using Next.js, Supabase Auth, PostgreSQL an
 - Private photo upload, internal/shared evidence and short-lived authorized downloads.
 - Independent closure checks, duplicate links, holds, reopening and case/audit history.
 - Colour-coded, role-filtered dashboards and a public concept page at `/concept`.
+- Contractor contract import from Excel, CSV or XML with templates and a schema ([docs/CONTRACT_IMPORT.md](docs/CONTRACT_IMPORT.md)).
 - Serbian (Latin) interface by default, with an English switch in the top bar. Translations live in `lib/i18n-sr.ts`, keyed by the English text.
 
 ## Pilot scope
