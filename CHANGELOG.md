@@ -1,3 +1,7 @@
+## 2.16.0 - 2026-10-14
+- Contractor scorecard on the Contracts page: for each firm, a grade (A to D), share of repairs done on time, share fixed first time (not reopened), average repair time, open work past its window, and ticket counts.
+- Repairs are timed from the contractor notice: urgent 3 days, standard 14 days, low 30 days.
+
 ## 2.15.0 - 2026-10-14
 - Before and after: a ticket with a damage photo and a repair or verification photo shows them at the top, with a drag slider (keyboard arrows work too) or side by side, plus the days from report to repair photo.
 - Demo packs now include illustrative before/after photos on repaired and closed tickets, clearly labelled as illustrations. Load the demo again from Platform settings to get them.
