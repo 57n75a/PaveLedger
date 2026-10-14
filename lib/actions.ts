@@ -62,6 +62,20 @@ export function applyAction(s:State,m:Member,actual:Member,body:Record<string,un
   const ot=s.tickets.find(x=>x.id===v.id);if(!ot||!canSee(ot,m))throw new AppError('Case not found.',404);if(closed(ot))throw new AppError('This ticket is closed. Create a new ticket instead.');
   const r=addObservation(s,ot,{now,actor,note:v.note,urgent:v.severity==='Urgent',source:v.source});
   event='Observation added to '+ot.id+(r.raised?' (priority raised to '+ot.severity+')':'');
+ }else if(action==='cost'){
+  // Repair cost record: estimate, actual cost and the part recovered from the contractor under warranty.
+  requireRole(['Admin','Head Analyst','Analyst']);
+  const amount=z.union([z.literal(''),z.null(),z.coerce.number().min(0).max(100_000_000)]).optional();
+  const v=z.object({id:short,estimate:amount,actual:amount,recovered:amount}).parse(body);
+  const ct=s.tickets.find(x=>x.id===v.id);if(!ct||!canSee(ct,m))throw new AppError('Case not found.',404);
+  if(m.role==='Analyst'&&ct.analyst!==m.id)throw new AppError('Only the assigned analyst can record costs for this ticket.',403);
+  const val=(x:unknown)=>x===''||x===null||x===undefined?undefined:Math.round(Number(x));
+  const next={estimate:val(v.estimate),actual:val(v.actual),recovered:val(v.recovered)};
+  if(next.recovered!==undefined&&next.actual!==undefined&&next.recovered>next.actual)throw new AppError('The recovered amount cannot be more than the actual cost.');
+  ct.cost={...next,updatedAt:now,updatedBy:actual.id};ct.updated=now;
+  const fmt=(n?:number)=>n===undefined?'—':String(n);
+  ct.history.push({at:now,actor,action:'Cost updated',note:`Estimate ${fmt(next.estimate)}, actual ${fmt(next.actual)}, recovered under warranty ${fmt(next.recovered)}.`,visibility:'internal'});
+  event='Cost updated '+ct.id;
  }else if(action==='overdueCheck'){
   requireRole(['Admin']);const r=overdueSweep(s,now);if(s.events[0]?.action?.startsWith('Overdue check'))s.events.shift();event=`Overdue check: ${r.overdue} overdue, ${r.alerts.length} alert(s), ${r.escalated} escalated`;
  }else if(action==='loadDemo'){

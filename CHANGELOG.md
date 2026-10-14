@@ -1,3 +1,8 @@
+## 2.22.0 - 2026-10-14
+- Repair cost tracking: each ticket can record an estimate, the actual cost and the amount recovered from the contractor under warranty, with the cost to the municipality calculated. A one-click "Contractor pays in full" fills the recovered amount on warranty cases. Admins, team leads and the assigned analyst can edit; contractors do not see costs.
+- Analytics shows total estimated, actual, recovered and net cost, the share recovered under warranty, repairs more than 20% over estimate, and a breakdown by contractor. The monthly council report includes the cost table.
+- Demo packs include illustrative costs (RSD for Serbia, CAD for Canada).
+
 ## 2.21.0 - 2026-10-14
 - Serbian Cyrillic: the Serbian site now offers three options in the language menu, LAT (Latin), ЋИР (Cyrillic) and EN. Cyrillic is derived from the Serbian translations, so both scripts always match. Ticket codes, acronyms (PDF, GPS), brand names, Roman numerals in street names, emails and web addresses stay in Latin. Dates use the Serbian Cyrillic format.
 - The language menu shows a short code next to each flag on both sites.

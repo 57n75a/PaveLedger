@@ -15,7 +15,7 @@ export async function context(req:Request){
  return {row,state,member,actual,user};
 }
 export function project(s:State,m:Member,admin:boolean){
- const tickets=s.tickets.filter(t=>canSee(t,m)).map(t=>m.role==='Contractor'?{...t,note:'',analyst:'',history:t.history.filter(h=>h.visibility==='shared'),evidence:(t.evidence||[]).filter(e=>e.visibility==='shared')}:t);
+ const tickets=s.tickets.filter(t=>canSee(t,m)).map(t=>m.role==='Contractor'?{...t,note:'',analyst:'',cost:undefined,reporterEmail:undefined,history:t.history.filter(h=>h.visibility==='shared'),evidence:(t.evidence||[]).filter(e=>e.visibility==='shared')}:t);
  const ids=new Set(tickets.map(t=>t.id));
  const members=s.members.filter(x=>['Admin','Auditor','Head Analyst','Director'].includes(m.role)||x.id===m.id).map(x=>({...x,email:['Admin','Head Analyst','Director'].includes(m.role)?x.email:'',authUserId:['Admin','Head Analyst','Director'].includes(m.role)?x.authUserId:undefined}));
  return {...s,tickets,members,rolePermissions:s.rolePermissions||{},branding:s.branding||{},teamProfiles:s.teamProfiles||{},teams:['Admin','Auditor'].includes(m.role)?s.teams:(m.teams||[]),contracts:s.contracts.filter(c=>['Admin','Auditor'].includes(m.role)||tickets.some(t=>t.road===c.road)&&(m.role!=='Contractor'||c.contractor===m.contractor)),notifications:s.notifications.filter(n=>(m.role==='Admin'||n.recipient===m.id)&&ids.has(n.ticket)),events:['Admin','Auditor'].includes(m.role)?s.events:[],viewer:{...m,authUserId:undefined},mail:{ready:mailReady()},outbox:m.role==='Admin'?(s.outbox||[]).slice(0,20).map(i=>({...i,text:''})):[],canPreview:admin,personas:admin?s.members.filter(isActive).map(x=>({id:x.id,name:x.name,role:x.role})):[]};

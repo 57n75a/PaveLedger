@@ -81,6 +81,16 @@ export function loadDemoPack(s: State, packId: PackId, keep: Member[], nowISO: s
       purpose, capturedAt: when, uploadedAt: when, uploadedBy: by, lat: pt.lat, lng: pt.lng, accuracy: fromDashcam ? 4.5 : 8, lane: 'Lane 1',
       quality: 'clear', visibility: 'shared', demoUrl: `/demo/${kind}-${pair}.jpg`,
     });
+    // Illustrative repair costs in the pack's currency, once a contractor has been notified.
+    const unit = packId === 'serbia' ? {rate: 117, step: 500} : {rate: 1.5, step: 10};
+    const base = ({Urgent: 450, Standard: 300, Low: 180} as Record<string, number>)[pt.severity] || 300;
+    const round = (v: number) => Math.round(v * unit.rate / unit.step) * unit.step;
+    const noticed = pt.path.some(st => ['Notice prepared', 'Acknowledged', 'Repair in progress'].includes(st));
+    const cost = noticed ? {
+      estimate: round(base * (1 + (n % 4) * 0.15)),
+      actual: completedAt ? round(base * (1 + (n % 4) * 0.15) * [0.9, 1.05, 1.3, 0.95][n % 4]) : undefined,
+      recovered: undefined as number | undefined, updatedAt: iso(now), updatedBy: lead?.id,
+    } : undefined;
     const evidence: Evidence[] = [];
     if (pt.path.includes('Confirmed')) evidence.push(photo('detection', iso(created), 'before', vehicle?.id || lead?.id || 'demo'));
     if (completedAt && status !== 'Reopened') evidence.push(photo(pt.path.includes('Verified closed') ? 'verification' : 'repair', completedAt, 'after', contractorPerson?.id || lead?.id || 'demo'));
@@ -92,6 +102,7 @@ export function loadDemoPack(s: State, packId: PackId, keep: Member[], nowISO: s
       warranty: pt.contractId ? 'Candidate match' : 'Needs review', source: pt.source, confidence: pt.confidence || 0,
       created: iso(created), observedAt: iso(created - 3600_000), updated, due: iso(created + (DUE_DAYS[pt.severity] || 14) * DAY),
       reopened: pt.reopened || 0, observations: pt.observations, note: p.notes[status] || '', history, evidence,
+      cost: cost && {...cost, actual: completedAt ? cost.actual ?? round(base) : undefined, recovered: completedAt && pt.contractId && status !== 'Reopened' ? (cost.actual ?? round(base)) : undefined},
       reportedBy: fromDashcam ? vehicle?.id : lead?.id, holdFrom: status === 'On hold' ? (pt.holdFrom as Status) : undefined, duplicateOf: pt.duplicateOf,
       completedAt, completedBy: completedAt ? contractorPerson?.id || lead?.id : undefined, closedAt, closedBy: closedAt ? auditor?.id : undefined,
     } as Ticket;
