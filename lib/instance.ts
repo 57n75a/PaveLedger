@@ -27,7 +27,7 @@ export type Instance = {
   /** Demo pack loaded by default. */
   demoPack: 'serbia' | 'canada';
   /** How the concept page talks about the market and pricing. */
-  market: {name: string; pricing: 'cad' | 'on-request'};
+  market: {name: string; pricing: 'cad' | 'eur'};
   /** Title and description for search engines and the browser tab, per language. */
   meta: Partial<Record<Lang, {title: string; description: string}>>;
 };
@@ -38,7 +38,7 @@ export const INSTANCES: Record<InstanceId, Instance> = {
     languages: ['sr', 'en'], defaultLang: 'sr', locales: {sr: 'sr-Latn-RS', en: 'en-GB', fr: 'fr-FR'},
     currency: 'RSD', country: 'SRB', geocodeCountry: 'rs', bbox: [18.81, 42.23, 23.01, 46.19], mapCenter: {lat: 44.0165, lng: 21.0059},
     examples: {address: 'Knez Mihailova 10, 11000 Beograd', street: 'Knez Mihailova', coords: '44.818700, 20.457300'},
-    demoPack: 'serbia', market: {name: 'Serbian', pricing: 'on-request'},
+    demoPack: 'serbia', market: {name: 'Serbian', pricing: 'eur'},
     meta: {
       sr: {title: 'PaveLedger Srbija | Inteligencija puteva', description: 'Prijave za bezbednost puteva i odgovornost za popravke. Privatna demonstracija.'},
       en: {title: 'PaveLedger Serbia | Road intelligence', description: 'Road safety tickets and repair accountability. Private demonstration.'},

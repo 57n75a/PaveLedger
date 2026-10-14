@@ -1,3 +1,7 @@
+## 2.12.2 - 2026-10-14
+- Concept page: the language flag in the top bar is a small icon again (it was stretched to logo width).
+- Serbia pricing in euros, before VAT: Municipal 500 €/month + 2.500 € setup, City 1.000 €/month + 5.000 € setup, Regional 2.000 €/month + 10.000 € setup.
+
 ## 2.12.1 - 2026-10-14
 - Serbian language icon now shows the official state flag of Serbia with the coat of arms.
 
