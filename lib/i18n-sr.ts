@@ -1142,4 +1142,13 @@ export const sr: Record<string, string> = {
   "{0}: use YYYY-MM-DD or DD.MM.YYYY.": "{0}: koristite GGGG-MM-DD ili DD.MM.GGGG.",
   "{0}: {1} rows found. Check that each field points to the right column.": "{0}: pronađeno redova: {1}. Proverite da li je svako polje povezano sa pravom kolonom.",
   "· Reopened ×{0}": "· Ponovo otvoreno ×{0}",
+  "Map": "Mapa",
+  "Loading map…": "Učitavanje mape…",
+  "Ticket map": "Mapa prijava",
+  "{0} tickets shown. Click a point to see the ticket.": "Prikazano prijava: {0}. Kliknite na tačku da vidite prijavu.",
+  "Open": "Otvoreno",
+  "All": "Sve",
+  "All teams": "Svi timovi",
+  "Reopened {0} times": "Ponovo otvorena {0} puta",
+  "Larger points have more observations. Faded points are closed.": "Veće tačke imaju više zapažanja. Bledje tačke su zatvorene prijave.",
 };

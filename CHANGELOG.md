@@ -1,3 +1,7 @@
+## 2.13.0 - 2026-10-14
+- New Map page: every ticket you can see on one map, coloured by severity (urgent, standard, low). Filter by open/closed, team and severity; click a point to see the ticket and open it. Larger points have more observations; closed tickets are faded.
+- Footer version now always matches the release.
+
 ## 2.12.2 - 2026-10-14
 - Concept page: the language flag in the top bar is a small icon again (it was stretched to logo width).
 - Serbia pricing in euros, before VAT: Municipal 500 €/month + 2.500 € setup, City 1.000 €/month + 5.000 € setup, Regional 2.000 €/month + 10.000 € setup.

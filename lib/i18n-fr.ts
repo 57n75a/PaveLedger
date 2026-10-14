@@ -1141,4 +1141,13 @@ export const fr: Record<string, string> = {
   "{0}: use YYYY-MM-DD or DD.MM.YYYY.": "{0} : utilisez AAAA-MM-JJ ou JJ.MM.AAAA.",
   "{0}: {1} rows found. Check that each field points to the right column.": "{0} : {1} lignes trouvées. Vérifiez que chaque champ pointe vers la bonne colonne.",
   "· Reopened ×{0}": "· Rouvert ×{0}",
+  "Map": "Carte",
+  "Loading map…": "Chargement de la carte…",
+  "Ticket map": "Carte des signalements",
+  "{0} tickets shown. Click a point to see the ticket.": "{0} signalements affichés. Cliquez sur un point pour voir le signalement.",
+  "Open": "Ouverts",
+  "All": "Tous",
+  "All teams": "Toutes les équipes",
+  "Reopened {0} times": "Rouvert {0} fois",
+  "Larger points have more observations. Faded points are closed.": "Les points plus grands ont plus d'observations. Les points pâles sont fermés.",
 };
