@@ -1,0 +1,1 @@
+rs.png: state flag of Serbia, coat of arms artwork from flag-icons (https://github.com/lipis/flag-icons), MIT License, Copyright (c) 2013 Panayiotis Lipiridis. Fitted to 3:2 for PaveLedger.

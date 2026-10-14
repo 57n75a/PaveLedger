@@ -89,7 +89,8 @@ export function useLang() { return useContext(LangContext); }
 
 export function Flag({lang, size = 20}: {lang: Lang; size?: number}) {
   const w = size, h = Math.round(size * 2 / 3);
-  if (lang === 'sr') return <svg width={w} height={h} viewBox="0 0 3 2" aria-hidden="true" style={{borderRadius: 2, boxShadow: '0 0 0 1px #0002', flexShrink: 0}}><rect width="3" height="2" fill="#fff"/><rect width="3" height="1.333" fill="#0c4076"/><rect width="3" height="0.667" fill="#c6363c"/></svg>;
+  // Official state flag of Serbia with the coat of arms (artwork: flag-icons, MIT), fitted to 3:2.
+  if (lang === 'sr') return <img src="/flags/rs.png" width={w} height={h} alt="" aria-hidden="true" style={{borderRadius: 2, boxShadow: '0 0 0 1px #0002', flexShrink: 0, display: 'block', objectFit: 'cover'}}/>;
   if (lang === 'fr') return <svg width={w} height={h} viewBox="0 0 3 2" aria-hidden="true" style={{borderRadius: 2, boxShadow: '0 0 0 1px #0002', flexShrink: 0}}><rect width="1" height="2" fill="#002654"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ce1126"/></svg>;
   // English shows the Canadian flag on the Canadian instance and the UK flag elsewhere.
   if (instance.id === 'ca') return <svg width={w} height={h} viewBox="0 0 120 80" aria-hidden="true" style={{borderRadius: 2, boxShadow: '0 0 0 1px #0002', flexShrink: 0}}><rect width="120" height="80" fill="#fff"/><rect width="30" height="80" fill="#d52b1e"/><rect x="90" width="30" height="80" fill="#d52b1e"/><path fill="#d52b1e" d="M60 14l-5 10-6-3 3 15-8-8-2 4-8-2 3 9-4 2 15 12-2 5 13-2v13h2V56l13 2-2-5 15-12-4-2 3-9-8 2-2-4-8 8 3-15-6 3z"/></svg>;

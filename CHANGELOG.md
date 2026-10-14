@@ -1,3 +1,6 @@
+## 2.12.1 - 2026-10-14
+- Serbian language icon now shows the official state flag of Serbia with the coat of arms.
+
 ## 2.12.0 - 2026-10-14
 - Country instances: one codebase, two profiles chosen by NEXT_PUBLIC_INSTANCE. Serbia (rs, default): Serbian and English, RSD. Canada (ca): English and French, CAD, own logo and examples. See docs/INSTANCES.md.
 - French: the whole interface is available in French on the Canada instance (EN/FR switcher), with Canadian date formats.
