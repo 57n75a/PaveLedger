@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 182" role="img" aria-label="PaveLedger Canada">
+  <title>PaveLedger Canada</title>
+  <g transform="translate(14 23)">
+    <rect width="136" height="136" rx="30" fill="#c9203d"/>
+    <path d="M58 22h20l30 92H28z" fill="#fff"/>
+    <path d="M66 30h4v14h-4zM65 56h6v18h-6zM63 86h10v20H63z" fill="#c9203d"/>
+    <path d="M100 26c4 6 3 12-2 16 6-1 10 2 10 7-5-2-9-1-11 3 1-6-1-10-6-11 5-3 7-9 9-15z" fill="#fff" opacity=".95"/>
+  </g>
+  <text x="170" y="104" font-family="Arial, Helvetica, sans-serif" font-size="66" font-weight="700" fill="#14263b" letter-spacing="-1.5">PaveLedger</text>
+  <text x="173" y="148" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#c9203d" letter-spacing="9">CANADA</text>
+</svg>

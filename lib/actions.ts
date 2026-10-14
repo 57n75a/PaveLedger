@@ -2,6 +2,7 @@ import { z } from 'zod';
 import {escalationTarget,TEAM_SCOPED_ROLES,ESCALATION_ROLES,canSee,permitted,isActive,closed,eligibleVerification,roles,wantsNotification,contractCovers,roleCan,CAPABILITIES,type State,type Member,type Ticket,type Status} from './domain.ts';
 import {queueNotice,retryFailed} from './outbox.ts';
 import {checkRow,contractKey,MAX_IMPORT_ROWS} from './contract-schema.ts';
+import {loadDemoPack} from './demo.ts';
 export class AppError extends Error {status:number;constructor(message:string,status=400){super(message);this.status=status}}
 const short=z.string().trim().min(1).max(150),noteField=z.string().trim().min(10).max(2000);
 const optCoord=(min:number,max:number)=>z.preprocess(x=>x===''||x==null?null:Number(x),z.number().min(min).max(max).nullable());
@@ -52,6 +53,13 @@ export function applyAction(s:State,m:Member,actual:Member,body:Record<string,un
    created++;
   }
   event='Bulk imported '+created+' contract(s)'+(skipped?', skipped '+skipped+' invalid row(s)':'')+(duplicates?', skipped '+duplicates+' duplicate(s)':'');
+ }else if(action==='loadDemo'){
+  // Replaces the demo content. Only a real administrator, not a role preview, and real accounts are kept.
+  if(actual.role!=='Admin'||m.id!==actual.id)throw new AppError('Only an administrator can load demo data. Return to your own identity first.',403);
+  const pack=z.enum(['serbia','canada']).parse(body.pack);
+  const keep=s.members.filter(x=>!x.demo);
+  try{loadDemoPack(s,pack,keep,now,actual.name)}catch(e){throw new AppError((e as Error).message)}
+  return;
  }else if(action==='team'){
   requireRole(['Admin']);const name=short.parse(body.name);if(s.teams.some(x=>x.toLowerCase()===name.toLowerCase()))throw new AppError('A team with that name already exists.');s.teams.push(name);event='Team created: '+name;
  }else if(action==='teamUpdate'){

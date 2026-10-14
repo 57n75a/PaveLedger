@@ -1,3 +1,12 @@
+## 2.12.0 - 2026-10-14
+- Country instances: one codebase, two profiles chosen by NEXT_PUBLIC_INSTANCE. Serbia (rs, default): Serbian and English, RSD. Canada (ca): English and French, CAD, own logo and examples. See docs/INSTANCES.md.
+- French: the whole interface is available in French on the Canada instance (EN/FR switcher), with Canadian date formats.
+- Demo packs: complete Serbian (Užice, Belgrade) and Canadian (Waterloo Region) sample worlds with teams, people, contracts and 15 tickets covering every status. Admins can load or reset a pack from Platform settings; real sign-in accounts are kept.
+- Analytics: the graph now sits at the top of Analytics; the separate Connections page is gone.
+- Address suggestions: typing an address in a new ticket suggests real addresses from the instance's country (live lookup, nothing stored) and fills GPS and street.
+- Keep-alive: a scheduled check every 5 days pings the database so it stays awake (needs CRON_SECRET).
+- Dates show in a compact format in every language; the top bar no longer crowds in French.
+
 ## 2.11.0 - 2026-10-13
 - Contractor import schema: one shared set of rules for the import screen and the server, covering 15 columns (6 required), with formats, examples and guidelines shown in the import window.
 - Templates: Excel (with a Guidelines sheet), CSV (UTF-8) and XML, downloadable from the import window and from Help and FAQ. A JSON Schema is published at /schemas/contract-import.schema.json for automated exports; docs/CONTRACT_IMPORT.md is the reference.

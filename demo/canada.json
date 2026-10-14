@@ -1,0 +1,53 @@
+{
+  "name": "Canada — Waterloo Region",
+  "description": "Streets in Waterloo, Kitchener and Cambridge, two teams, analysts, an auditor, a director, three contractors and a camera vehicle.",
+  "teams": ["Waterloo North", "Kitchener–Cambridge"],
+  "people": [
+    {"id": "demo-lead", "name": "Jordan Lee", "role": "Head Analyst", "teams": ["Waterloo North", "Kitchener–Cambridge"], "phone": "+1 519 555 0100"},
+    {"id": "demo-analyst", "name": "Avery Chen", "role": "Analyst", "teams": ["Waterloo North"]},
+    {"id": "demo-analyst-2", "name": "Émilie Tremblay", "role": "Analyst", "teams": ["Kitchener–Cambridge"]},
+    {"id": "demo-auditor", "name": "Taylor Martin", "role": "Auditor", "teams": []},
+    {"id": "demo-director", "name": "Priya Singh", "role": "Director", "teams": []},
+    {"id": "demo-contractor", "name": "Casey Brooks", "role": "Contractor", "teams": [], "contractor": "Northline Civil (demo)"},
+    {"id": "demo-contractor-2", "name": "Luc Gagnon", "role": "Contractor", "teams": [], "contractor": "Maple Crest Asphalt (demo)"},
+    {"id": "demo-vehicle", "name": "Transit bus 214", "role": "Vehicle", "teams": [], "vehicleTag": "GRT-214"}
+  ],
+  "contracts": [
+    {"id": "CT-CA-201", "contractor": "Northline Civil (demo)", "road": "King Street North", "additionalRoads": ["University Avenue West"], "start": "2025-05-01", "end": "2028-04-30", "poc": "Casey Brooks", "email": "casey.brooks@example.invalid", "phone": "+1 519 555 0142", "scope": "Surface course resurfacing, both directions, Uptown Waterloo", "addressCountry": "CAN", "notes": "Contract 2025-PW-118 (demo)"},
+    {"id": "CT-CA-202", "contractor": "Maple Crest Asphalt (demo)", "road": "King Street West", "additionalRoads": ["Victoria Street North"], "start": "2025-08-15", "end": "2028-08-14", "poc": "Luc Gagnon", "email": "luc.gagnon@example.invalid", "phone": "+1 519 555 0177", "scope": "Downtown Kitchener patching and joint sealing", "addressCountry": "CAN"},
+    {"id": "CT-CA-203", "contractor": "Laurentian Roadworks (demo)", "road": "Hespeler Road", "start": "2024-04-01", "end": "2026-03-31", "poc": "Jamie Reid", "email": "jamie.reid@example.invalid", "scope": "Southbound lanes, Pinebush Road to Highway 401", "addressCountry": "CAN", "notes": "Warranty expired (demo)"}
+  ],
+  "notes": {
+    "Detected": "Report received.",
+    "Team assigned": "Routed to the area team.",
+    "Analyst assigned": "Analyst assigned.",
+    "Investigating": "Site visit scheduled; checking location and lane.",
+    "Confirmed": "Defect confirmed on site.",
+    "Notice prepared": "Notice prepared under the matching contract.",
+    "Acknowledged": "Contractor acknowledged the notice.",
+    "Repair in progress": "Contractor crew on site.",
+    "Awaiting verification": "Repair finished; waiting for an independent check.",
+    "Verified closed": "Repeat photo confirms the repair.",
+    "Reopened": "Defect returned after the freeze-thaw cycle.",
+    "On hold": "Watermain work underway; waiting for completion.",
+    "Rejected": "No defect found at the location.",
+    "Duplicate": "Same location as the primary ticket."
+  },
+  "tickets": [
+    {"id": "CA-DEMO-001", "title": "Pothole in travel lane", "road": "King Street North", "address": "70 King Street North, Waterloo, ON N2J 2X1", "lat": 43.46790, "lng": -80.52280, "severity": "Urgent", "team": "Waterloo North", "analyst": "demo-analyst", "source": "Automated dashcam", "confidence": 0.95, "observations": 4, "daysAgo": 2, "path": []},
+    {"id": "CA-DEMO-002", "title": "Surface cracking", "road": "University Avenue West", "address": "200 University Avenue West, Waterloo, ON N2L 3G1", "lat": 43.47230, "lng": -80.54490, "severity": "Standard", "team": "Waterloo North", "source": "Resident report", "observations": 1, "daysAgo": 3, "path": ["Team assigned"]},
+    {"id": "CA-DEMO-003", "title": "Damaged manhole or catch basin cover", "road": "Weber Street North", "address": "150 Weber Street North, Waterloo, ON N2J 3H6", "lat": 43.47290, "lng": -80.51820, "severity": "Urgent", "team": "Waterloo North", "analyst": "demo-analyst", "source": "Staff report", "observations": 2, "daysAgo": 5, "path": ["Team assigned", "Analyst assigned", "Investigating"]},
+    {"id": "CA-DEMO-004", "title": "Pothole in travel lane", "road": "King Street North", "address": "180 King Street North, Waterloo, ON N2J 2Y8", "lat": 43.47320, "lng": -80.52710, "severity": "Standard", "team": "Waterloo North", "analyst": "demo-analyst", "source": "Automated dashcam", "confidence": 0.89, "observations": 3, "daysAgo": 9, "contractId": "CT-CA-201", "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed", "Notice prepared"]},
+    {"id": "CA-DEMO-005", "title": "Edge break or shoulder damage", "road": "University Avenue West", "address": "250 University Avenue West, Waterloo, ON N2L 3E9", "lat": 43.47350, "lng": -80.54880, "severity": "Standard", "team": "Waterloo North", "analyst": "demo-analyst", "source": "Field inspection", "observations": 2, "daysAgo": 14, "contractId": "CT-CA-201", "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed", "Notice prepared", "Acknowledged", "Repair in progress"]},
+    {"id": "CA-DEMO-006", "title": "Pothole in travel lane", "road": "King Street North", "address": "25 King Street North, Waterloo, ON N2J 2W6", "lat": 43.46560, "lng": -80.52130, "severity": "Urgent", "team": "Waterloo North", "analyst": "demo-analyst", "source": "Automated dashcam", "confidence": 0.92, "observations": 5, "daysAgo": 20, "contractId": "CT-CA-201", "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed", "Notice prepared", "Acknowledged", "Repair in progress", "Awaiting verification"]},
+    {"id": "CA-DEMO-007", "title": "Surface cracking", "road": "Erb Street West", "address": "65 Erb Street West, Waterloo, ON N2L 1T1", "lat": 43.46150, "lng": -80.52880, "severity": "Low", "team": "Waterloo North", "analyst": "demo-analyst", "source": "Resident report", "observations": 1, "daysAgo": 34, "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed", "Repair in progress", "Awaiting verification", "Verified closed"]},
+    {"id": "CA-DEMO-008", "title": "Sinkhole or road collapse", "road": "Victoria Street North", "address": "60 Victoria Street North, Kitchener, ON N2H 5B9", "lat": 43.45700, "lng": -80.49700, "severity": "Urgent", "team": "Kitchener–Cambridge", "analyst": "demo-analyst-2", "source": "Staff report", "observations": 6, "daysAgo": 1, "path": ["Team assigned", "Analyst assigned"]},
+    {"id": "CA-DEMO-009", "title": "Pothole in travel lane", "road": "King Street West", "address": "200 King Street West, Kitchener, ON N2G 4V6", "lat": 43.45160, "lng": -80.49250, "severity": "Standard", "team": "Kitchener–Cambridge", "analyst": "demo-analyst-2", "source": "Automated dashcam", "confidence": 0.87, "observations": 2, "daysAgo": 11, "contractId": "CT-CA-202", "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed", "Notice prepared", "Acknowledged"]},
+    {"id": "CA-DEMO-010", "title": "Pothole in travel lane", "road": "King Street West", "address": "305 King Street West, Kitchener, ON N2G 1B9", "lat": 43.45030, "lng": -80.49620, "severity": "Urgent", "team": "Kitchener–Cambridge", "analyst": "demo-analyst-2", "source": "Automated dashcam", "confidence": 0.93, "observations": 7, "daysAgo": 41, "contractId": "CT-CA-202", "reopened": 1, "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed", "Notice prepared", "Acknowledged", "Repair in progress", "Awaiting verification", "Verified closed", "Reopened"]},
+    {"id": "CA-DEMO-011", "title": "Lane marking or sign damage", "road": "Hespeler Road", "address": "355 Hespeler Road, Cambridge, ON N1R 6B3", "lat": 43.39270, "lng": -80.32200, "severity": "Low", "team": "Kitchener–Cambridge", "analyst": "demo-analyst-2", "source": "Volunteer report", "observations": 1, "daysAgo": 16, "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed", "Repair in progress"]},
+    {"id": "CA-DEMO-012", "title": "Damaged manhole or catch basin cover", "road": "Fischer-Hallman Road", "address": "1400 Fischer-Hallman Road, Kitchener, ON N2R 1X6", "lat": 43.41820, "lng": -80.51190, "severity": "Standard", "team": "Kitchener–Cambridge", "analyst": "demo-analyst-2", "source": "Staff report", "observations": 2, "daysAgo": 8, "holdFrom": "Investigating", "path": ["Team assigned", "Analyst assigned", "Investigating", "On hold"]},
+    {"id": "CA-DEMO-013", "title": "Other road defect", "road": "Ottawa Street South", "address": "300 Ottawa Street South, Kitchener, ON N2G 3T4", "lat": 43.43210, "lng": -80.47520, "severity": "Low", "team": "Kitchener–Cambridge", "analyst": "demo-analyst-2", "source": "Resident report", "observations": 1, "daysAgo": 6, "path": ["Team assigned", "Analyst assigned", "Investigating", "Rejected"]},
+    {"id": "CA-DEMO-014", "title": "Pothole in travel lane", "road": "Victoria Street North", "address": "62 Victoria Street North, Kitchener, ON N2H 5B9", "lat": 43.45710, "lng": -80.49710, "severity": "Urgent", "team": "Kitchener–Cambridge", "analyst": "demo-analyst-2", "source": "Resident report", "observations": 1, "daysAgo": 1, "duplicateOf": "CA-DEMO-008", "path": ["Team assigned", "Analyst assigned", "Investigating", "Duplicate"]},
+    {"id": "CA-DEMO-015", "title": "Pothole in travel lane", "road": "Victoria Street North", "address": "110 Victoria Street North, Kitchener, ON N2H 5C5", "lat": 43.4591, "lng": -80.4989, "severity": "Standard", "team": "Kitchener–Cambridge", "analyst": "demo-analyst-2", "source": "Automated dashcam", "confidence": 0.9, "observations": 2, "daysAgo": 4, "contractId": "CT-CA-202", "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed"]}
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "name": "Srbija — Užice i Beograd",
+  "description": "Gradske ulice u Užicu i Beogradu, dva tima, analitičari, revizor, direktor, tri izvođača i vozilo sa kamerom.",
+  "teams": ["Užice — centar", "Beograd — Stari grad i Vračar"],
+  "people": [
+    {"id": "demo-lead", "name": "Jelena Marković", "role": "Head Analyst", "teams": ["Užice — centar", "Beograd — Stari grad i Vračar"], "phone": "+381 31 512 100"},
+    {"id": "demo-analyst", "name": "Nikola Petrović", "role": "Analyst", "teams": ["Užice — centar"]},
+    {"id": "demo-analyst-2", "name": "Milica Jovanović", "role": "Analyst", "teams": ["Beograd — Stari grad i Vračar"]},
+    {"id": "demo-auditor", "name": "Ana Stojanović", "role": "Auditor", "teams": []},
+    {"id": "demo-director", "name": "Dragan Kostić", "role": "Director", "teams": []},
+    {"id": "demo-contractor", "name": "Marko Pavlović", "role": "Contractor", "teams": [], "contractor": "Putogradnja Zlatibor (demo)"},
+    {"id": "demo-contractor-2", "name": "Ivana Lukić", "role": "Contractor", "teams": [], "contractor": "Asfalt Sever (demo)"},
+    {"id": "demo-vehicle", "name": "Vozilo JKP-07", "role": "Vehicle", "teams": [], "vehicleTag": "JKP-07"}
+  ],
+  "contracts": [
+    {"id": "CT-RS-101", "contractor": "Putogradnja Zlatibor (demo)", "road": "Dimitrija Tucovića", "additionalRoads": ["Kralja Petra I", "Nikole Pašića"], "start": "2025-04-01", "end": "2028-03-31", "poc": "Marko Pavlović", "email": "marko.pavlovic@example.invalid", "phone": "+381 31 555 210", "scope": "Kolovoz i trotoari u centru Užica, obe strane ulice", "addressCountry": "SRB", "notes": "Ugovor br. 404-11/2025 (demo)"},
+    {"id": "CT-RS-102", "contractor": "Asfalt Sever (demo)", "road": "Bulevar kralja Aleksandra", "additionalRoads": ["Takovska"], "start": "2025-09-01", "end": "2028-08-31", "poc": "Ivana Lukić", "email": "ivana.lukic@example.invalid", "phone": "+381 11 555 330", "scope": "Kolovoz od Trga Nikole Pašića do Vukovog spomenika", "addressCountry": "SRB"},
+    {"id": "CT-RS-103", "contractor": "Kolovoz Beograd (demo)", "road": "Knez Mihailova", "start": "2024-05-01", "end": "2026-04-30", "poc": "Petar Ristić", "email": "petar.ristic@example.invalid", "scope": "Pešačka zona, kamene ploče", "addressCountry": "SRB", "notes": "Garancija istekla (demo)"}
+  ],
+  "notes": {
+    "Detected": "Prijava primljena.",
+    "Team assigned": "Prijava usmerena timu.",
+    "Analyst assigned": "Dodeljen analitičar.",
+    "Investigating": "Izlazak na teren zakazan, proverava se lokacija.",
+    "Confirmed": "Oštećenje potvrđeno na terenu.",
+    "Notice prepared": "Obaveštenje izvođaču pripremljeno prema ugovoru.",
+    "Acknowledged": "Izvođač potvrdio prijem.",
+    "Repair in progress": "Ekipa izvođača na terenu.",
+    "Awaiting verification": "Popravka završena, čeka se nezavisna provera.",
+    "Verified closed": "Ponovljena fotografija potvrđuje popravku.",
+    "Reopened": "Oštećenje se ponovo pojavilo posle kiše.",
+    "On hold": "Radovi na vodovodu u toku, čeka se završetak.",
+    "Rejected": "Na lokaciji nema oštećenja.",
+    "Duplicate": "Ista lokacija kao glavna prijava."
+  },
+  "tickets": [
+    {"id": "RS-DEMO-001", "title": "Pothole in travel lane", "road": "Dimitrija Tucovića", "address": "Dimitrija Tucovića 52, 31000 Užice", "lat": 43.85736, "lng": 19.84212, "severity": "Urgent", "team": "Užice — centar", "analyst": "demo-analyst", "source": "Automated dashcam", "confidence": 0.94, "observations": 4, "daysAgo": 2, "path": []},
+    {"id": "RS-DEMO-002", "title": "Surface cracking", "road": "Nikole Pašića", "address": "Nikole Pašića 12, 31000 Užice", "lat": 43.85690, "lng": 19.85048, "severity": "Standard", "team": "Užice — centar", "source": "Resident report", "observations": 1, "daysAgo": 3, "path": ["Team assigned"]},
+    {"id": "RS-DEMO-003", "title": "Damaged manhole or catch basin cover", "road": "Kralja Petra I", "address": "Kralja Petra I 20, 31000 Užice", "lat": 43.85600, "lng": 19.84700, "severity": "Urgent", "team": "Užice — centar", "analyst": "demo-analyst", "source": "Staff report", "observations": 2, "daysAgo": 5, "path": ["Team assigned", "Analyst assigned", "Investigating"]},
+    {"id": "RS-DEMO-004", "title": "Pothole in travel lane", "road": "Dimitrija Tucovića", "address": "Dimitrija Tucovića 110, 31000 Užice", "lat": 43.85802, "lng": 19.83905, "severity": "Standard", "team": "Užice — centar", "analyst": "demo-analyst", "source": "Automated dashcam", "confidence": 0.88, "observations": 3, "daysAgo": 9, "contractId": "CT-RS-101", "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed", "Notice prepared"]},
+    {"id": "RS-DEMO-005", "title": "Edge break or shoulder damage", "road": "Kralja Petra I", "address": "Kralja Petra I 41, 31000 Užice", "lat": 43.85548, "lng": 19.84405, "severity": "Standard", "team": "Užice — centar", "analyst": "demo-analyst", "source": "Field inspection", "observations": 2, "daysAgo": 14, "contractId": "CT-RS-101", "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed", "Notice prepared", "Acknowledged", "Repair in progress"]},
+    {"id": "RS-DEMO-006", "title": "Pothole in travel lane", "road": "Nikole Pašića", "address": "Nikole Pašića 30, 31000 Užice", "lat": 43.85720, "lng": 19.85210, "severity": "Urgent", "team": "Užice — centar", "analyst": "demo-analyst", "source": "Automated dashcam", "confidence": 0.91, "observations": 5, "daysAgo": 20, "contractId": "CT-RS-101", "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed", "Notice prepared", "Acknowledged", "Repair in progress", "Awaiting verification"]},
+    {"id": "RS-DEMO-007", "title": "Surface cracking", "road": "Dimitrija Tucovića", "address": "Dimitrija Tucovića 8, 31000 Užice", "lat": 43.85650, "lng": 19.84690, "severity": "Low", "team": "Užice — centar", "analyst": "demo-analyst", "source": "Resident report", "observations": 1, "daysAgo": 34, "contractId": "CT-RS-101", "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed", "Notice prepared", "Acknowledged", "Repair in progress", "Awaiting verification", "Verified closed"]},
+    {"id": "RS-DEMO-008", "title": "Sinkhole or road collapse", "road": "Bulevar kralja Aleksandra", "address": "Bulevar kralja Aleksandra 73, 11000 Beograd", "lat": 44.80540, "lng": 20.47730, "severity": "Urgent", "team": "Beograd — Stari grad i Vračar", "analyst": "demo-analyst-2", "source": "Staff report", "observations": 6, "daysAgo": 1, "path": ["Team assigned", "Analyst assigned"]},
+    {"id": "RS-DEMO-009", "title": "Pothole in travel lane", "road": "Takovska", "address": "Takovska 24, 11000 Beograd", "lat": 44.81310, "lng": 20.47250, "severity": "Standard", "team": "Beograd — Stari grad i Vračar", "analyst": "demo-analyst-2", "source": "Automated dashcam", "confidence": 0.86, "observations": 2, "daysAgo": 11, "contractId": "CT-RS-102", "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed", "Notice prepared", "Acknowledged"]},
+    {"id": "RS-DEMO-010", "title": "Pothole in travel lane", "road": "Bulevar kralja Aleksandra", "address": "Bulevar kralja Aleksandra 120, 11000 Beograd", "lat": 44.80130, "lng": 20.48420, "severity": "Urgent", "team": "Beograd — Stari grad i Vračar", "analyst": "demo-analyst-2", "source": "Automated dashcam", "confidence": 0.93, "observations": 7, "daysAgo": 41, "contractId": "CT-RS-102", "reopened": 1, "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed", "Notice prepared", "Acknowledged", "Repair in progress", "Awaiting verification", "Verified closed", "Reopened"]},
+    {"id": "RS-DEMO-011", "title": "Lane marking or sign damage", "road": "Knez Mihailova", "address": "Knez Mihailova 21, 11000 Beograd", "lat": 44.81760, "lng": 20.45690, "severity": "Low", "team": "Beograd — Stari grad i Vračar", "analyst": "demo-analyst-2", "source": "Volunteer report", "observations": 1, "daysAgo": 16, "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed", "Repair in progress"]},
+    {"id": "RS-DEMO-012", "title": "Damaged manhole or catch basin cover", "road": "Takovska", "address": "Takovska 10, 11000 Beograd", "lat": 44.81420, "lng": 20.46900, "severity": "Standard", "team": "Beograd — Stari grad i Vračar", "analyst": "demo-analyst-2", "source": "Staff report", "observations": 2, "daysAgo": 8, "holdFrom": "Investigating", "path": ["Team assigned", "Analyst assigned", "Investigating", "On hold"]},
+    {"id": "RS-DEMO-013", "title": "Other road defect", "road": "Knez Mihailova", "address": "Knez Mihailova 40, 11000 Beograd", "lat": 44.81880, "lng": 20.45430, "severity": "Low", "team": "Beograd — Stari grad i Vračar", "analyst": "demo-analyst-2", "source": "Resident report", "observations": 1, "daysAgo": 6, "path": ["Team assigned", "Analyst assigned", "Investigating", "Rejected"]},
+    {"id": "RS-DEMO-014", "title": "Pothole in travel lane", "road": "Bulevar kralja Aleksandra", "address": "Bulevar kralja Aleksandra 75, 11000 Beograd", "lat": 44.80535, "lng": 20.47745, "severity": "Urgent", "team": "Beograd — Stari grad i Vračar", "analyst": "demo-analyst-2", "source": "Resident report", "observations": 1, "daysAgo": 1, "duplicateOf": "RS-DEMO-008", "path": ["Team assigned", "Analyst assigned", "Investigating", "Duplicate"]},
+    {"id": "RS-DEMO-015", "title": "Pothole in travel lane", "road": "Kralja Petra I", "address": "Kralja Petra I 7, 31000 Užice", "lat": 43.8559, "lng": 19.8483, "severity": "Standard", "team": "Užice — centar", "analyst": "demo-analyst", "source": "Automated dashcam", "confidence": 0.9, "observations": 2, "daysAgo": 4, "contractId": "CT-RS-101", "path": ["Team assigned", "Analyst assigned", "Investigating", "Confirmed"]}
+  ]
+}

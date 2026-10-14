@@ -1,5 +1,6 @@
 'use client';
 import {tx,useLang} from '@/lib/i18n';
+import {instance} from '@/lib/instance';
 import {useEffect,useRef,useState} from 'react';
 import 'leaflet/dist/leaflet.css';
 import {authorizedFetch} from '@/lib/supabase-browser';
@@ -67,7 +68,7 @@ export default function ScopeLocator({initialLat,initialLng,initialRadius}:{init
   if(!form)return;
   const fd=new FormData(form);
   const q=String(fd.get('address')||'').trim();
-  const country=String(fd.get('addressCountry')||'USA');
+  const country=String(fd.get('addressCountry')||instance.country);
   if(!q){toast.error(tx('Enter an address first'));return}
   setBusy(true);
   try{

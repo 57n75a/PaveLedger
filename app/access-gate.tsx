@@ -1,5 +1,6 @@
 'use client';
 import {tx,useLang,LangSwitch} from '@/lib/i18n';
+import {instance} from '@/lib/instance';
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { browserClient } from '@/lib/supabase-browser';
@@ -74,7 +75,7 @@ export default function AccessGate({ children }: { children: ReactNode }) {useLa
 
   if (session && !mustChange) return <div key={session.user.id}>{children}</div>;
   return <main className="access-page"><div className="access-lang"><LangSwitch/></div><section className="access-card">
-    <img src="/logo.png" width="270" height="91" alt={tx("PaveLedger")} />
+    <img src={instance.logo} width="270" height="91" alt={tx("PaveLedger")} />
     <p className="eyebrow">{tx("ROAD OPERATIONS")}</p>
     {session && mustChange ? <>
       <h1>{tx("Choose a new password")}</h1>

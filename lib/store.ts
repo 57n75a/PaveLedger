@@ -1,6 +1,8 @@
 import 'server-only';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { seed,normalizeState, type State } from './domain';
+import { loadDemoPack } from './demo';
+import { instance } from './instance';
 
 type WorkspaceRow = { id: string; owner: string; revision: number; data: State };
 export const workspaceId = process.env.WORKSPACE_ID?.trim() || 'municipality-pilot';
@@ -56,4 +58,6 @@ export async function saveWorkspace(state: State, revision: number): Promise<boo
   return !!data?.length;
 }
 
-function initialState(id:string,email:string){const s=seed(id,email);if(process.env.SEED_DEMO_DATA!=='true'){s.tickets=[];s.members=s.members.filter(m=>m.id===id);s.contracts=[];}return normalizeState(s);}
+// New workspaces start empty, or with this country's demo pack when SEED_DEMO_DATA=true.
+function initialState(id:string,email:string){const s=seed(id,email);const owner=s.members.filter(m=>m.id===id);if(process.env.SEED_DEMO_DATA!=='true'){s.tickets=[];s.members=owner;s.contracts=[];return normalizeState(s);}
+ loadDemoPack(s,instance.demoPack,owner,new Date().toISOString(),'System');s.members.forEach(m=>{if(m.id===id)m.teams=[...s.teams]});return normalizeState(s);}

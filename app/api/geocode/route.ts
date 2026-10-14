@@ -1,6 +1,7 @@
 import {context,failure} from '@/lib/context';
 import {AppError} from '@/lib/actions';
 import {forwardGeocode} from '@/lib/geo';
+import {instance} from '@/lib/instance';
 export const runtime='nodejs';export const dynamic='force-dynamic';
 
 export async function GET(req:Request){try{
@@ -9,7 +10,7 @@ export async function GET(req:Request){try{
  const url=new URL(req.url);
  const q=(url.searchParams.get('q')||'').trim();
  if(q.length<3||q.length>300)throw new AppError('Enter a fuller address.');
- const country=url.searchParams.get('country')||undefined;
+ const country=url.searchParams.get('country')||instance.country;
  const rawLat=url.searchParams.get('nearLat'),rawLng=url.searchParams.get('nearLng');
  const nl=Number(rawLat),ng=Number(rawLng);
  const hasNear=rawLat!==null&&rawLng!==null&&Number.isFinite(nl)&&Number.isFinite(ng);
