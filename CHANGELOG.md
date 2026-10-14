@@ -1,3 +1,9 @@
+## 2.18.0 - 2026-10-14
+- Installable field app: PaveLedger can be added to a phone or tablet home screen with its own icon (crown mark for Serbia, road mark for Canada), with a shortcut to the report page.
+- Works offline: the app opens without signal and shows the last workspace loaded on the device.
+- Notes, stage and priority changes, new tickets and photos made offline are saved on the device and sent automatically, in order, when the connection returns. A chip in the top bar shows "Offline" and how many changes are waiting; changes the server refuses are kept with the reason and can be discarded.
+- Signing out removes the stored workspace and any waiting changes from the device.
+
 ## 2.17.0 - 2026-10-14
 - Monthly council report on the Analytics page: pick a month and download a two-page PDF with eight key figures (compared with the month before), a six-month chart of reported and repaired tickets, tables by priority and by team, contractor performance and the five oldest open tickets. It uses the workspace logo and name.
 

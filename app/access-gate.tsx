@@ -23,6 +23,7 @@ export default function AccessGate({ children }: { children: ReactNode }) {useLa
       const { data: { subscription } } = auth.onAuthStateChange((event, next) => {
         if (!active) return;
         if (event === 'PASSWORD_RECOVERY') setRecovery(true);
+        if (event === 'SIGNED_OUT') { navigator.serviceWorker?.controller?.postMessage('clear-data'); void import('@/lib/offline-queue').then(q => q.clearQueue()); }
         setSession(next); setLoading(false);
       });
       auth.getSession().then(({ data, error }) => {
