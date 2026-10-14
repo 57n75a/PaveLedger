@@ -1,3 +1,8 @@
+## 2.15.0 - 2026-10-14
+- Before and after: a ticket with a damage photo and a repair or verification photo shows them at the top, with a drag slider (keyboard arrows work too) or side by side, plus the days from report to repair photo.
+- Demo packs now include illustrative before/after photos on repaired and closed tickets, clearly labelled as illustrations. Load the demo again from Platform settings to get them.
+- Photo purpose and clarity labels are translated.
+
 ## 2.14.0 - 2026-10-14
 - Resident reporting at /report: anyone can report a pothole or road damage without an account. Mark the spot by address search, phone location or tapping the map; add a description, an optional photo and email, and tick "dangerous" to make it urgent.
 - Each report gets a tracking code. /track shows the seven repair steps with dates, never internal notes, names or photos.

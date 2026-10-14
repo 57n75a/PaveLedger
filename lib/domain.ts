@@ -15,7 +15,7 @@ return {teams:['Central roads','East roads'],members:[{id:owner,name:'Workspace 
 }
 export const transitions:Record<string,string[]>={'Detected':['Team assigned','Rejected','Duplicate'],'Team assigned':['Analyst assigned','On hold'],'Analyst assigned':['Investigating','On hold'],'Investigating':['Confirmed','Rejected','Duplicate','On hold'],'Confirmed':['Notice prepared','Repair in progress','On hold'],'Notice prepared':['Acknowledged','On hold'],'Acknowledged':['Repair in progress','On hold'],'Repair in progress':['Awaiting verification','On hold'],'Awaiting verification':['Verified closed','Reopened','On hold'],'Verified closed':['Reopened'],'Reopened':['Investigating','Repair in progress','On hold'],'On hold':['Investigating'],'Rejected':[],'Duplicate':[]};
 
-export type Evidence={id:string,name:string,mime:string,bytes:number,sha256:string,purpose:'detection'|'repair'|'verification',capturedAt:string,uploadedAt:string,uploadedBy:string,lat:number,lng:number,accuracy:number,lane:string,quality:'clear'|'unclear';visibility?:'internal'|'shared'};
+export type Evidence={id:string,name:string,mime:string,bytes:number,sha256:string,purpose:'detection'|'repair'|'verification',capturedAt:string,uploadedAt:string,uploadedBy:string,lat:number,lng:number,accuracy:number,lane:string,quality:'clear'|'unclear';visibility?:'internal'|'shared';/** Illustrative image bundled with a demo pack (public path); real evidence lives in private storage. */demoUrl?:string};
 export const roles:Role[]=['Admin','Analyst','Head Analyst','Contractor','Auditor','Vehicle','Director'];
 export const isActive=(m:Member)=>m.active!==false;
 export const closed=(t:Ticket)=>['Verified closed','Rejected','Duplicate'].includes(t.status);

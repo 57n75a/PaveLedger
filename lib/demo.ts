@@ -2,7 +2,7 @@
 // Packs live in demo/*.json with dates relative to today, so a freshly loaded demo always looks current.
 import serbia from '../demo/serbia.json' with {type: 'json'};
 import canada from '../demo/canada.json' with {type: 'json'};
-import {transitions, type State, type Member, type Ticket, type Status, type Role} from './domain.ts';
+import {transitions, type State, type Member, type Ticket, type Status, type Role, type Evidence} from './domain.ts';
 
 export type PackTicket = {id: string; title: string; road: string; address?: string; lat: number; lng: number; severity: string; team: string; analyst?: string; source: string; confidence?: number; observations: number; daysAgo: number; contractId?: string; reopened?: number; holdFrom?: string; duplicateOf?: string; path: string[]};
 export type DemoPack = {name: string; description: string; teams: string[]; people: {id: string; name: string; role: string; teams: string[]; contractor?: string; vehicleTag?: string; phone?: string}[]; contracts: (State['contracts'][number])[]; notes: Record<string, string>; tickets: PackTicket[]};
@@ -74,6 +74,16 @@ export function loadDemoPack(s: State, packId: PackId, keep: Member[], nowISO: s
       if (st === 'Reopened') closedAt = undefined;
     });
     const status = (pt.path[pt.path.length - 1] || 'Detected') as Status;
+    // Illustrative photos: a "before" for every ticket past confirmation, an "after" once the repair is done.
+    const pair = (n % 3) + 1;
+    const photo = (purpose: Evidence['purpose'], when: string, kind: 'before' | 'after', by: string): Evidence => ({
+      id: `demo-${pt.id}-${purpose}`, name: `${kind}-${pair}.jpg`, mime: 'image/jpeg', bytes: 200_000, sha256: `demo-${pt.id}-${purpose}`,
+      purpose, capturedAt: when, uploadedAt: when, uploadedBy: by, lat: pt.lat, lng: pt.lng, accuracy: fromDashcam ? 4.5 : 8, lane: 'Lane 1',
+      quality: 'clear', visibility: 'shared', demoUrl: `/demo/${kind}-${pair}.jpg`,
+    });
+    const evidence: Evidence[] = [];
+    if (pt.path.includes('Confirmed')) evidence.push(photo('detection', iso(created), 'before', vehicle?.id || lead?.id || 'demo'));
+    if (completedAt && status !== 'Reopened') evidence.push(photo(pt.path.includes('Verified closed') ? 'verification' : 'repair', completedAt, 'after', contractorPerson?.id || lead?.id || 'demo'));
     const updated = history[history.length - 1].at;
     if (pt.analyst && ['Analyst assigned', 'Investigating', 'Confirmed', 'Reopened'].includes(status)) notifications.push({id: 'demo-n-' + pt.id, recipient: pt.analyst, ticket: pt.id, text: 'Assigned to you: ' + pt.road, at: history.find(h => h.action === 'Analyst assigned')?.at || updated});
     return {
@@ -81,7 +91,7 @@ export function loadDemoPack(s: State, packId: PackId, keep: Member[], nowISO: s
       severity: pt.severity, status, team: pt.team, analyst: pt.analyst || '', contractor: firmOf(pt.contractId), contractId: pt.contractId,
       warranty: pt.contractId ? 'Candidate match' : 'Needs review', source: pt.source, confidence: pt.confidence || 0,
       created: iso(created), observedAt: iso(created - 3600_000), updated, due: iso(created + (DUE_DAYS[pt.severity] || 14) * DAY),
-      reopened: pt.reopened || 0, observations: pt.observations, note: p.notes[status] || '', history, evidence: [],
+      reopened: pt.reopened || 0, observations: pt.observations, note: p.notes[status] || '', history, evidence,
       reportedBy: fromDashcam ? vehicle?.id : lead?.id, holdFrom: status === 'On hold' ? (pt.holdFrom as Status) : undefined, duplicateOf: pt.duplicateOf,
       completedAt, completedBy: completedAt ? contractorPerson?.id || lead?.id : undefined, closedAt, closedBy: closedAt ? auditor?.id : undefined,
     } as Ticket;
