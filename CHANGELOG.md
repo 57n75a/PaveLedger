@@ -1,3 +1,8 @@
+## 2.19.0 - 2026-10-14
+- Overdue alerts and escalation: the daily job checks every open ticket against its deadline (the due date, or the contractor repair window from the notice). When it is missed, the assigned analyst and team lead, or the contractor, get an alert in the app and one summary email. If it is still overdue after a grace period (half the window, at least 2 days), it escalates one step up the escalation chain and that role is alerted. Each step happens once per stage.
+- Overdue tickets are marked in the tickets table and on the ticket. Admins can run the check now from Notifications. Everyone can turn overdue alerts off in their notification settings.
+- Serbian: "Offline" is used for the offline status and messages.
+
 ## 2.18.0 - 2026-10-14
 - Installable field app: PaveLedger can be added to a phone or tablet home screen with its own icon (crown mark for Serbia, road mark for Canada), with a shortcut to the report page.
 - Works offline: the app opens without signal and shows the last workspace loaded on the device.
