@@ -1,3 +1,6 @@
+## 2.17.0 - 2026-10-14
+- Monthly council report on the Analytics page: pick a month and download a two-page PDF with eight key figures (compared with the month before), a six-month chart of reported and repaired tickets, tables by priority and by team, contractor performance and the five oldest open tickets. It uses the workspace logo and name.
+
 ## 2.16.0 - 2026-10-14
 - Contractor scorecard on the Contracts page: for each firm, a grade (A to D), share of repairs done on time, share fixed first time (not reopened), average repair time, open work past its window, and ticket counts.
 - Repairs are timed from the contractor notice: urgent 3 days, standard 14 days, low 30 days.
