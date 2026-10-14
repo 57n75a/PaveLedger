@@ -14,7 +14,7 @@ import {Table,TableHeader,TableBody,TableRow,TableHead,TableCell} from '@/compon
 import {Checkbox} from '@/components/ui/checkbox';
 import {DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuLabel,DropdownMenuItem,DropdownMenuSeparator} from '@/components/ui/dropdown-menu';
 import {Toaster,toast} from 'sonner';
-import {State,Member,Ticket,colors,statuses,transitions,permitted,nextStages,eligibleVerification,roles,isActive} from '@/lib/domain';
+import {State,Member,Ticket,colors,statuses,transitions,permitted,nextStages,eligibleVerification,roles,isActive,distanceMeters} from '@/lib/domain';
 import {APP_VERSION} from '@/lib/version';
 import ContractImport,{downloadTemplate} from '@/components/contract-import';
 import {TicketStepper,NextStepCard,FlowBar} from '@/components/flow';
@@ -27,6 +27,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import {pdfFonts} from '@/lib/pdf-fonts';
 import {enqueue,isOffline} from '@/lib/offline-queue';
+import {MERGE_RADIUS_M} from '@/lib/observe';
 import SyncStatus from '@/components/sync-status';
 import dynamic from 'next/dynamic';
 const GraphView=dynamic(()=>import('@/components/graph-view'),{ssr:false,loading:()=><p className="muted">{tx('Loading graph…')}</p>});
@@ -49,15 +50,16 @@ export default function Workspace(){useLang();
  async function load(){try{setError('');const r=await authorizedFetch(endpoint);const d:any=await r.json();if(!r.ok)throw new Error(d.error);setData(d)}catch(e){setError((e as Error).message)}}
  useEffect(()=>{load();setSelected(null)},[persona]);
  async function mutate(body:any){if(!data||busy)return false;setBusy(true);try{const r=await authorizedFetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,revision:data.revision})});const d:any=await r.json();if(!r.ok){if(r.status===409)await load();throw new Error(d.error)}setData(d);toast.success(tx('Workspace updated'));return true}catch(e){if(isOffline(e)&&OFFLINE_ACTIONS.includes(body.action)){await enqueue({kind:'action',body,label:offlineLabel(body,data),at:new Date().toISOString(),persona});toast.info(tx('No connection. Saved on this device and will be sent when you are back online.'));return true}toast.error(tx((e as Error).message));return false}finally{setBusy(false)}}
-async function createTicket(fields:Record<string,any>,files:File[],opts:{authorized:boolean,quality:string}):Promise<boolean>{
+async function createTicket(fields:Record<string,any>,files:File[],opts:{authorized:boolean,quality:string,mergeInto?:string}):Promise<boolean>{
 if(!data||busy)return false;setBusy(true);
+const observeBody=opts.mergeInto?{action:'observe',id:opts.mergeInto,note:[fields.title,fields.note].filter(Boolean).join(' — '),severity:fields.severity,source:fields.source}:null;
 try{
 const before=new Set(data.tickets.map(x=>x.id));
-const r=await authorizedFetch('/api/workspace',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'create',...fields,revision:data.revision})});
+const r=await authorizedFetch('/api/workspace',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...(observeBody||{action:'create',...fields}),revision:data.revision})});
 const d:any=await r.json();
 if(!r.ok){if(r.status===409)await load();throw new Error(d.error)}
 setData(d);
-const created=(d.tickets as Ticket[]).find(x=>!before.has(x.id));
+const created=opts.mergeInto?(d.tickets as Ticket[]).find(x=>x.id===opts.mergeInto):(d.tickets as Ticket[]).find(x=>!before.has(x.id));
 let revision:number=d.revision,failed=0;
 if(created&&files.length){
 const seen=Date.parse(fields.observedAt);
@@ -70,10 +72,10 @@ const up=await authorizedFetch('/api/evidence',{method:'POST',body:form});
 if(up.ok){revision+=1}else{failed+=1;const ud:any=await up.json().catch(()=>({}));toast.error(tx(files[i].name+': '+(ud.error||'could not be attached')));if(up.status===409)break}
 }}
 await load();
-if(failed)toast.warning(tx("Ticket created, but {0} photo(s) could not be attached. Open the ticket to add them.", [failed]));else toast.success(tx('Ticket created'));
+if(failed)toast.warning(tx("Ticket created, but {0} photo(s) could not be attached. Open the ticket to add them.", [failed]));else toast.success(tx(opts.mergeInto?'Added to {0}':'Ticket created', opts.mergeInto?[opts.mergeInto]:[]));
 if(created){setView('Tickets');setSelected(created.id)}
 return true;
-}catch(e){if(isOffline(e)){await enqueue({kind:'create',fields,files:files.map(f=>({blob:f,name:f.name})),quality:opts.quality,label:tx('New ticket: {0}', [String(fields.road||fields.title||'')]),at:new Date().toISOString(),persona});toast.info(tx('No connection. The ticket is saved on this device and will be created when you are back online.'));setView('Tickets');return true}toast.error(tx((e as Error).message));return false}finally{setBusy(false)}}
+}catch(e){if(isOffline(e)&&observeBody){await enqueue({kind:'action',body:observeBody,label:tx('Observation for {0}', [String(opts.mergeInto)]),at:new Date().toISOString(),persona});const tk=(data.tickets as Ticket[]).find(x=>x.id===opts.mergeInto);for(const f of files)await enqueue({kind:'evidence',ticket:String(opts.mergeInto),fields:{authorized:'true',purpose:'detection',quality:opts.quality,capturedAt:String(fields.observedAt),lat:String(fields.lat),lng:String(fields.lng),accuracy:String(fields.accuracy),lane:String(fields.lane||'Lane 1')},file:f,fileName:f.name,label:tx('Photo for {0}', [String(opts.mergeInto)]),at:new Date().toISOString(),persona});toast.info(tx('No connection. Saved on this device and will be sent when you are back online.'));setView('Tickets');if(tk)setSelected(tk.id);return true}if(isOffline(e)){await enqueue({kind:'create',fields,files:files.map(f=>({blob:f,name:f.name})),quality:opts.quality,label:tx('New ticket: {0}', [String(fields.road||fields.title||'')]),at:new Date().toISOString(),persona});toast.info(tx('No connection. The ticket is saved on this device and will be created when you are back online.'));setView('Tickets');return true}toast.error(tx((e as Error).message));return false}finally{setBusy(false)}}
 async function usersCall(body:any):Promise<{ok:boolean,password?:string}>{if(!data||busy)return {ok:false};setBusy(true);try{const r=await authorizedFetch('/api/users',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,revision:data.revision})});const d:any=await r.json();if(!r.ok){if(r.status===409)await load();throw new Error(d.error)}if(d.tickets)setData(d);if(d.loginRemoved===false)toast.warning(tx('The membership was removed, but the sign-in account could not be deleted. Remove it in Supabase, Authentication, Users.'));else toast.success(tx('Workspace updated'));return {ok:true,password:d.password}}catch(e){toast.error(tx((e as Error).message));return {ok:false}}finally{setBusy(false)}}
 useEffect(()=>{const saved=typeof window!=='undefined'?localStorage.getItem('paveledger-theme'):null;if(saved==='dark')setTheme('dark')},[]);
 useEffect(()=>{document.documentElement.setAttribute('data-theme',theme);localStorage.setItem('paveledger-theme',theme)},[theme]);
@@ -270,12 +272,17 @@ if(await mutate({action:'ticketLocation',id:t.id,address:String(fd.get('address'
 <p className="footnote">{tx("Changing the location does not change the contract already tagged to this case.")}</p>
 <div className="button-row"><button className="primary" disabled={busy}>{tx("Save location")}</button><button type="button" className="secondary" onClick={()=>setEdit(false)}>{tx("Cancel")}</button></div>
 </form></div>}
-function NewTicketPage({data,busy,onCreate,onCancel}:{data:Data,busy:boolean,onCreate:(fields:Record<string,any>,files:File[],opts:{authorized:boolean,quality:string})=>Promise<boolean>,onCancel:()=>void}){useLang();
+function NewTicketPage({data,busy,onCreate,onCancel}:{data:Data,busy:boolean,onCreate:(fields:Record<string,any>,files:File[],opts:{authorized:boolean,quality:string,mergeInto?:string})=>Promise<boolean>,onCancel:()=>void}){useLang();
 const v=data.viewer;
 const nowLocal=()=>new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16);
 const [address,setAddress]=useState(''),[road,setRoad]=useState(''),[gps,setGps]=useState(''),[accuracy,setAccuracy]=useState('5'),[locating,setLocating]=useState(false),[files,setFiles]=useState<File[]>([]),[urls,setUrls]=useState<string[]>([]);
 const point=parseCoordinates(gps);
 const teams=data.teams||[];
+// Open tickets close to this spot: offer to add the report there instead of creating a duplicate.
+const nearby=point?(data.tickets as Ticket[]).filter(x=>!['Verified closed','Rejected','Duplicate'].includes(x.status)&&!x.archived).map(x=>({t:x,d:distanceMeters(point,x)})).filter(x=>x.d<=40).sort((a,b)=>a.d-b.d).slice(0,4):[];
+const [mergeInto,setMergeInto]=useState<string>('');
+const nearKey=nearby.map(x=>x.t.id).join(',');
+useEffect(()=>{setMergeInto(nearby.length&&nearby[0].d<=MERGE_RADIUS_M?nearby[0].t.id:'')},[nearKey]);
 useEffect(()=>{const u=files.map(f=>URL.createObjectURL(f));setUrls(u);return()=>u.forEach(x=>URL.revokeObjectURL(x))},[files]);
 async function findAddress(){
 const q=address.trim();if(q.length<3){toast.error(tx('Enter an address first'));return}
@@ -300,7 +307,7 @@ if(!point){toast.error(tx('Enter GPS coordinates as in Google Maps, for example 
 if(files.length&&!fd.has('authorized')){toast.error(tx('Confirm the photos are authorised and redacted'));return}
 const obs=String(fd.get('observedAt')||'');
 const fields={road:road.trim(),title:String(fd.get('title')||'').trim(),address:address.trim(),lat:point.lat,lng:point.lng,accuracy:Number(accuracy),lane:String(fd.get('lane')||'').trim(),severity:String(fd.get('severity')||'Standard'),source:String(fd.get('source')||'Manual report'),team:String(fd.get('team')||''),observedAt:obs?new Date(obs).toISOString():new Date().toISOString(),note:String(fd.get('note')||'').trim()};
-await onCreate(fields,files,{authorized:fd.has('authorized'),quality:String(fd.get('quality')||'clear')})}}>
+await onCreate(fields,files,{authorized:fd.has('authorized'),quality:String(fd.get('quality')||'clear'),mergeInto:mergeInto||undefined})}}>
 <section className="settings-card"><div className="section-head"><div><h2>{tx("Location")}</h2><p>{tx("Where is the defect? Enter an address, paste coordinates from Google Maps, or use your current position.")}</p></div></div>
 <div className="form cols">
 <label className="span2">{tx("Full address")}<AddressSuggest value={address} onChange={setAddress} placeholder={instance.examples.address} inputProps={{maxLength:300}} near={point?{lat:point.lat,lng:point.lng}:null} onPick={sg=>{setAddress(sg.label);setGps(formatCoordinates(sg.lat,sg.lng));if(sg.street)setRoad(sg.street);setAccuracy('10')}}/><small className="muted">{tx("Start typing an address in {0} and pick it from the list. The map pin and street fill in automatically.",[tx(instance.id==='ca'?'Canada':'Serbia')])}</small></label>
@@ -312,6 +319,9 @@ await onCreate(fields,files,{authorized:fd.has('authorized'),quality:String(fd.g
 <label>{tx("Lane")}<input name="lane" required defaultValue={tx("Lane 1")}/></label>
 </div>
 {point&&<iframe className="map-preview" title={tx("Location preview")} loading="lazy" src={'https://www.google.com/maps?q='+point.lat+','+point.lng+'&z=17&output=embed'}/>}
+{nearby.length>0&&<div className="nearby" role="group" aria-label={tx("Already reported nearby")}><strong>{tx("Already reported nearby")}</strong><p>{tx("Adding your report to an open ticket avoids duplicates. It counts as another observation and can raise the priority.")}</p>
+{nearby.map(x=><label key={x.t.id} className={'nearby-row'+(mergeInto===x.t.id?' on':'')}><input type="radio" name="mergeInto" checked={mergeInto===x.t.id} onChange={()=>setMergeInto(x.t.id)}/><span><b>{tx("Add to {0}", [x.t.id])}</b> · {tx(x.t.road)} · {tx("{0} m away", [String(Math.round(x.d))])}<small>{tx(x.t.status)} · {tx(x.t.severity)} · {tx("{0} observations", [String(x.t.observations)])}</small></span></label>)}
+<label className={'nearby-row'+(mergeInto===''?' on':'')}><input type="radio" name="mergeInto" checked={mergeInto===''} onChange={()=>setMergeInto('')}/><span><b>{tx("Create a new ticket")}</b><small>{tx("Choose this if it is a different problem.")}</small></span></label></div>}
 </section>
 <section className="settings-card"><div className="section-head"><div><h2>{tx("Details")}</h2><p>{tx("What was seen, how urgent it is, and who it belongs to.")}</p></div></div>
 <div className="form cols">
@@ -328,7 +338,7 @@ await onCreate(fields,files,{authorized:fd.has('authorized'),quality:String(fd.g
 {files.length>0&&<><label>{tx("Photo clarity")}<select name="quality" defaultValue="clear"><option value="clear">{tx("Clear")}</option><option value="unclear">{tx("Unclear or partly obscured")}</option></select></label>
 <label className="check"><input type="checkbox" name="authorized"/>{tx("I confirm these photos are authorised for this case and that faces and licence plates are redacted.")}</label></>}
 </div></section>
-<div className="button-row"><button className="primary" disabled={busy}>{tx(busy?'Creating...':'Create ticket')}</button><button type="button" className="secondary" disabled={busy} onClick={onCancel}>{tx("Cancel")}</button></div>
+<div className="button-row"><button className="primary" disabled={busy}>{tx(busy?'Saving...':mergeInto?'Add to {0}':'Create ticket', mergeInto?[mergeInto]:[])}</button><button type="button" className="secondary" disabled={busy} onClick={onCancel}>{tx("Cancel")}</button></div>
 </form>}
 // Images up to 2 MB are accepted and resized in the browser so that what is stored stays small.
 async function shrinkImage(file:File,maxSide:number,maxChars=200_000):Promise<string>{

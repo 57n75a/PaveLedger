@@ -1,3 +1,7 @@
+## 2.20.0 - 2026-10-14
+- Duplicate prevention for staff reports: when the location of a new ticket is within 40 m of open tickets, the form lists them with their distance. Within 20 m the nearest is preselected, and saving adds the report and photos to that ticket as another observation. "Create a new ticket" is always available for a different problem. Works offline too.
+- Repeated reports raise the priority: low becomes standard at 3 observations and standard becomes urgent at 5; a report marked urgent raises it at once. The due date moves earlier to match. Resident reports use the same rules.
+
 ## 2.19.0 - 2026-10-14
 - Overdue alerts and escalation: the daily job checks every open ticket against its deadline (the due date, or the contractor repair window from the notice). When it is missed, the assigned analyst and team lead, or the contractor, get an alert in the app and one summary email. If it is still overdue after a grace period (half the window, at least 2 days), it escalates one step up the escalation chain and that role is alerted. Each step happens once per stage.
 - Overdue tickets are marked in the tickets table and on the ticket. Admins can run the check now from Notifications. Everyone can turn overdue alerts off in their notification settings.

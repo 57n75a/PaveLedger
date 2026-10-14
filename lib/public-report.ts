@@ -2,8 +2,9 @@
 // Pure functions so the rules are tested without a server. The API routes call these.
 import {openTicketsNear, wantsNotification, isActive, type State, type Ticket, type Status} from './domain.ts';
 import {ticketFlow, PHASES} from './workflow.ts';
+import {addObservation, MERGE_RADIUS_M} from './observe.ts';
 
-export const SAME_DEFECT_RADIUS_M = 20;
+export const SAME_DEFECT_RADIUS_M = MERGE_RADIUS_M;
 export const MAX_DESCRIPTION = 1000;
 
 export type ResidentReport = {
@@ -34,17 +35,10 @@ export function applyResidentReport(s: State, r: ResidentReport, now: string, id
   const note = r.description.trim().slice(0, MAX_DESCRIPTION);
   const existing = openTicketsNear(s, r.lat, r.lng, SAME_DEFECT_RADIUS_M)[0];
   if (existing) {
-    existing.observations++;
     existing.residentReports = (existing.residentReports || 0) + 1;
-    existing.updated = now;
-    if (r.dangerous && existing.severity !== 'Urgent') {
-      existing.severity = 'Urgent';
-      existing.history.push({at: now, actor: 'Resident', action: 'Priority raised', note: 'A resident reported this location as dangerous.', visibility: 'internal'});
-    }
-    existing.history.push({at: now, actor: 'Resident', action: 'Resident report added', note, visibility: 'internal'});
+    addObservation(s, existing, {now, actor: 'Resident', note, urgent: r.dangerous, source: 'Resident report'});
     existing.publicCode ||= ids.code;
     if (r.email && !existing.reporterEmail) existing.reporterEmail = r.email;
-    notifyLeads(s, existing, `Another resident report: ${existing.road}`, now);
     s.events.unshift({at: now, actor: 'Resident', action: 'Resident report added to ' + existing.id});
     return {ticket: existing, merged: true};
   }

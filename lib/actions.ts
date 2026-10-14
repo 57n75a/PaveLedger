@@ -3,6 +3,7 @@ import {escalationTarget,TEAM_SCOPED_ROLES,ESCALATION_ROLES,canSee,permitted,isA
 import {queueNotice,retryFailed} from './outbox.ts';
 import {checkRow,contractKey,MAX_IMPORT_ROWS} from './contract-schema.ts';
 import {overdueSweep} from './overdue.ts';
+import {addObservation} from './observe.ts';
 import {loadDemoPack} from './demo.ts';
 export class AppError extends Error {status:number;constructor(message:string,status=400){super(message);this.status=status}}
 const short=z.string().trim().min(1).max(150),noteField=z.string().trim().min(10).max(2000);
@@ -54,6 +55,13 @@ export function applyAction(s:State,m:Member,actual:Member,body:Record<string,un
    created++;
   }
   event='Bulk imported '+created+' contract(s)'+(skipped?', skipped '+skipped+' invalid row(s)':'')+(duplicates?', skipped '+duplicates+' duplicate(s)':'');
+ }else if(action==='observe'){
+  // Another report of an open ticket's problem: add it there instead of creating a duplicate.
+  if(!isActive(m)||!roleCan(s,m.customRole||m.role,'create'))throw new AppError('This action is not permitted for your role.',403);
+  const v=z.object({id:short,note:noteField,severity:z.enum(['Urgent','Standard','Low']).optional(),source:z.string().trim().max(60).optional()}).parse(body);
+  const ot=s.tickets.find(x=>x.id===v.id);if(!ot||!canSee(ot,m))throw new AppError('Case not found.',404);if(closed(ot))throw new AppError('This ticket is closed. Create a new ticket instead.');
+  const r=addObservation(s,ot,{now,actor,note:v.note,urgent:v.severity==='Urgent',source:v.source});
+  event='Observation added to '+ot.id+(r.raised?' (priority raised to '+ot.severity+')':'');
  }else if(action==='overdueCheck'){
   requireRole(['Admin']);const r=overdueSweep(s,now);if(s.events[0]?.action?.startsWith('Overdue check'))s.events.shift();event=`Overdue check: ${r.overdue} overdue, ${r.alerts.length} alert(s), ${r.escalated} escalated`;
  }else if(action==='loadDemo'){
