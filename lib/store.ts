@@ -49,6 +49,14 @@ export async function readWorkspace(user: { userId: string; email: string }): Pr
   const row=result.data as WorkspaceRow;row.data=normalizeState(row.data);return row;
 }
 
+/** Read the workspace for public, signed-out features. Returns null until the owner has created it. */
+export async function readWorkspaceRow(): Promise<WorkspaceRow | null> {
+  const {data, error} = await adminClient().from('workspaces').select('id,owner,revision,data').eq('id', workspaceId).maybeSingle();
+  if (error) throw new Error('503:Workspace storage is unavailable.');
+  if (!data) return null;
+  const row = data as WorkspaceRow; row.data = normalizeState(row.data); return row;
+}
+
 export async function saveWorkspace(state: State, revision: number): Promise<boolean> {
   // Compare-and-swap is one PostgreSQL statement; stale writes cannot overwrite accepted changes.
   const { data, error } = await adminClient().from('workspaces')

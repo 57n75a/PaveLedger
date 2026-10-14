@@ -1,3 +1,11 @@
+## 2.14.0 - 2026-10-14
+- Resident reporting at /report: anyone can report a pothole or road damage without an account. Mark the spot by address search, phone location or tapping the map; add a description, an optional photo and email, and tick "dangerous" to make it urgent.
+- Each report gets a tracking code. /track shows the seven repair steps with dates, never internal notes, names or photos.
+- A report within 20 m of an open ticket is added to that ticket (one more observation) instead of creating a duplicate.
+- Staff see resident reports as "Resident report" tickets with the number of residents, their email and the public code. Team leads are notified.
+- Spam protection: hidden bot field, limits per connection and per day, location must be inside the country, photo contents are checked.
+- Links to the report page on the sign-in and concept pages.
+
 ## 2.13.0 - 2026-10-14
 - New Map page: every ticket you can see on one map, coloured by severity (urgent, standard, low). Filter by open/closed, team and severity; click a point to see the ticket and open it. Larger points have more observations; closed tickets are faded.
 - Footer version now always matches the release.

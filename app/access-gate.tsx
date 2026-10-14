@@ -103,5 +103,6 @@ export default function AccessGate({ children }: { children: ReactNode }) {useLa
     {error && <p role="alert" className="access-error">{tx(error)}</p>}
     <p className="footnote">{tx("Access is provisioned by your workspace administrator. Contact them for a new account or password reset.")}</p>
     <a className="text-button" href="/concept">{tx("Explore the platform")}</a>
+    <a className="text-button report-link" href="/report">{tx("Report a road problem without an account")}</a>
   </section></main>;
 }

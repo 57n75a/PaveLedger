@@ -28,6 +28,8 @@ export type Instance = {
   demoPack: 'serbia' | 'canada';
   /** How the concept page talks about the market and pricing. */
   market: {name: string; pricing: 'cad' | 'eur'};
+  /** Emergency number shown on the public report form. */
+  emergency: string;
   /** Title and description for search engines and the browser tab, per language. */
   meta: Partial<Record<Lang, {title: string; description: string}>>;
 };
@@ -38,7 +40,7 @@ export const INSTANCES: Record<InstanceId, Instance> = {
     languages: ['sr', 'en'], defaultLang: 'sr', locales: {sr: 'sr-Latn-RS', en: 'en-GB', fr: 'fr-FR'},
     currency: 'RSD', country: 'SRB', geocodeCountry: 'rs', bbox: [18.81, 42.23, 23.01, 46.19], mapCenter: {lat: 44.0165, lng: 21.0059},
     examples: {address: 'Knez Mihailova 10, 11000 Beograd', street: 'Knez Mihailova', coords: '44.818700, 20.457300'},
-    demoPack: 'serbia', market: {name: 'Serbian', pricing: 'eur'},
+    demoPack: 'serbia', emergency: '192', market: {name: 'Serbian', pricing: 'eur'},
     meta: {
       sr: {title: 'PaveLedger Srbija | Inteligencija puteva', description: 'Prijave za bezbednost puteva i odgovornost za popravke. Privatna demonstracija.'},
       en: {title: 'PaveLedger Serbia | Road intelligence', description: 'Road safety tickets and repair accountability. Private demonstration.'},
@@ -49,7 +51,7 @@ export const INSTANCES: Record<InstanceId, Instance> = {
     languages: ['en', 'fr'], defaultLang: 'en', locales: {en: 'en-CA', fr: 'fr-CA', sr: 'sr-Latn-RS'},
     currency: 'CAD', country: 'CAN', geocodeCountry: 'ca', bbox: [-141.01, 41.68, -52.62, 83.11], mapCenter: {lat: 43.4643, lng: -80.5204},
     examples: {address: '200 King Street West, Kitchener, ON N2G 4V6', street: 'King Street West', coords: '43.451600, -80.492500'},
-    demoPack: 'canada', market: {name: 'Canadian', pricing: 'cad'},
+    demoPack: 'canada', emergency: '911', market: {name: 'Canadian', pricing: 'cad'},
     meta: {
       en: {title: 'PaveLedger Canada | Road intelligence', description: 'Road safety tickets and repair accountability. Private demonstration.'},
       fr: {title: 'PaveLedger Canada | Intelligence routière', description: 'Signalements de sécurité routière et responsabilité des réparations. Démonstration privée.'},

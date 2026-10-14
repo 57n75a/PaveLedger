@@ -7,9 +7,11 @@ import {tx, useLang, getLang} from '@/lib/i18n';
 export type Suggestion = {label: string; lat: number; lng: number; street: string; city: string};
 
 /** Address field with suggestions from this deployment's country as you type. */
-export default function AddressSuggest({value, onChange, onPick, placeholder, near, inputProps}: {
+export default function AddressSuggest({value, onChange, onPick, placeholder, near, inputProps, publicLookup}: {
   value: string; onChange: (v: string) => void; onPick: (s: Suggestion) => void; placeholder?: string;
   near?: {lat: number; lng: number} | null; inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
+  /** Use the signed-out lookup (resident report form). */
+  publicLookup?: boolean;
 }) {
   useLang();
   const [items, setItems] = useState<Suggestion[]>([]);
@@ -28,7 +30,7 @@ export default function AddressSuggest({value, onChange, onPick, placeholder, ne
       try {
         const p = new URLSearchParams({q, lang: getLang()});
         if (near) { p.set('nearLat', String(near.lat)); p.set('nearLng', String(near.lng)); }
-        const r = await authorizedFetch('/api/geocode/suggest?' + p.toString());
+        const r = publicLookup ? await fetch('/api/public/suggest?' + p.toString()) : await authorizedFetch('/api/geocode/suggest?' + p.toString());
         const d = await r.json();
         if (cancelled) return;
         if (!r.ok) { setItems([]); setState('error'); return; }
