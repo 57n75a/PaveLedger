@@ -28,7 +28,7 @@ export default function AddressSuggest({value, onChange, onPick, placeholder, ne
     const timer = setTimeout(async () => {
       setState('loading');
       try {
-        const p = new URLSearchParams({q, lang: getLang()});
+        const p = new URLSearchParams({q, lang: getLang() === 'sr-cyrl' ? 'sr' : getLang()});
         if (near) { p.set('nearLat', String(near.lat)); p.set('nearLng', String(near.lng)); }
         const r = publicLookup ? await fetch('/api/public/suggest?' + p.toString()) : await authorizedFetch('/api/geocode/suggest?' + p.toString());
         const d = await r.json();

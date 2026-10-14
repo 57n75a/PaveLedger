@@ -7,10 +7,12 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 import {sr} from './i18n-sr';
 import {fr} from './i18n-fr';
 import {instance, type Lang} from './instance';
+import {toCyrillic} from './cyrillic';
 export type {Lang} from './instance';
 
 export const LANGS: Lang[] = instance.languages;
-const DICTS: Partial<Record<Lang, Record<string, string>>> = {sr, fr};
+// Cyrillic uses the Serbian (Latin) translations and is transliterated as it is shown.
+const DICTS: Partial<Record<Lang, Record<string, string>>> = {sr, 'sr-cyrl': sr, fr};
 const STORAGE_KEY = 'paveledger-lang';
 let current: Lang = instance.defaultLang;
 const dict = () => DICTS[current];
@@ -54,8 +56,7 @@ function translate(text: string): string {
   return found === undefined ? text : lead + found + trail;
 }
 
-/** Translate English UI text. Non-string values pass through unchanged. */
-export function t<T>(key: T, vars?: unknown[]): T {
+function tLatin<T>(key: T, vars?: unknown[]): T {
   if (typeof key !== 'string') return key;
   if (!vars) return translate(key) as T;
   const d = dict();
@@ -68,8 +69,14 @@ export function t<T>(key: T, vars?: unknown[]): T {
   return (pattern === core ? translate(filled) : filled) as T;
 }
 
+/** Translate English UI text. Non-string values pass through unchanged. */
+export function t<T>(key: T, vars?: unknown[]): T {
+  const out = tLatin(key, vars);
+  return (current === 'sr-cyrl' && typeof out === 'string' ? toCyrillic(out) : out) as T;
+}
+
 const LangContext = createContext<{lang: Lang; setLang: (l: Lang) => void}>({lang: instance.defaultLang, setLang: () => {}});
-const HTML_LANG: Record<Lang, string> = {sr: 'sr-Latn', en: 'en', fr: 'fr-CA'};
+const HTML_LANG: Record<Lang, string> = {sr: 'sr-Latn', 'sr-cyrl': 'sr-Cyrl', en: 'en', fr: 'fr-CA'};
 
 export function LangProvider({children}: {children: React.ReactNode}) {
   const [lang, setState] = useState<Lang>(instance.defaultLang);
@@ -90,15 +97,16 @@ export function useLang() { return useContext(LangContext); }
 export function Flag({lang, size = 20}: {lang: Lang; size?: number}) {
   const w = size, h = Math.round(size * 2 / 3);
   // Official state flag of Serbia with the coat of arms (artwork: flag-icons, MIT), fitted to 3:2.
-  if (lang === 'sr') return <img src="/flags/rs.png" width={w} height={h} alt="" aria-hidden="true" style={{borderRadius: 2, boxShadow: '0 0 0 1px #0002', flexShrink: 0, display: 'block', objectFit: 'cover'}}/>;
+  if (lang === 'sr' || lang === 'sr-cyrl') return <img src="/flags/rs.png" width={w} height={h} alt="" aria-hidden="true" style={{borderRadius: 2, boxShadow: '0 0 0 1px #0002', flexShrink: 0, display: 'block', objectFit: 'cover'}}/>;
   if (lang === 'fr') return <svg width={w} height={h} viewBox="0 0 3 2" aria-hidden="true" style={{borderRadius: 2, boxShadow: '0 0 0 1px #0002', flexShrink: 0}}><rect width="1" height="2" fill="#002654"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ce1126"/></svg>;
   // English shows the Canadian flag on the Canadian instance and the UK flag elsewhere.
   if (instance.id === 'ca') return <svg width={w} height={h} viewBox="0 0 120 80" aria-hidden="true" style={{borderRadius: 2, boxShadow: '0 0 0 1px #0002', flexShrink: 0}}><rect width="120" height="80" fill="#fff"/><rect width="30" height="80" fill="#d52b1e"/><rect x="90" width="30" height="80" fill="#d52b1e"/><path fill="#d52b1e" d="M60 14l-5 10-6-3 3 15-8-8-2 4-8-2 3 9-4 2 15 12-2 5 13-2v13h2V56l13 2-2-5 15-12-4-2 3-9-8 2-2-4-8 8 3-15-6 3z"/></svg>;
   return <svg width={w} height={h} viewBox="0 0 60 40" aria-hidden="true" style={{borderRadius: 2, boxShadow: '0 0 0 1px #0002', flexShrink: 0}}><clipPath id="pl-uk"><rect width="60" height="40"/></clipPath><g clipPath="url(#pl-uk)"><rect width="60" height="40" fill="#012169"/><path d="M0,0 60,40M60,0 0,40" stroke="#fff" strokeWidth="8"/><path d="M0,0 60,40M60,0 0,40" stroke="#C8102E" strokeWidth="3"/><path d="M30,0V40M0,20H60" stroke="#fff" strokeWidth="12"/><path d="M30,0V40M0,20H60" stroke="#C8102E" strokeWidth="7"/></g></svg>;
 }
 
-const NAMES: Record<Lang, string> = {sr: 'Srpski', en: 'English', fr: 'Français'};
-const LABEL: Record<Lang, string> = {sr: 'Jezik', en: 'Language', fr: 'Langue'};
+const NAMES: Record<Lang, string> = {sr: 'Srpski (latinica)', 'sr-cyrl': 'Српски (ћирилица)', en: 'English', fr: 'Français'};
+const CODES: Record<Lang, string> = {sr: 'LAT', 'sr-cyrl': 'ЋИР', en: 'EN', fr: 'FR'};
+const LABEL: Record<Lang, string> = {sr: 'Jezik', 'sr-cyrl': 'Језик', en: 'Language', fr: 'Langue'};
 
 /** Language dropdown: the current flag with an arrow, and the flags stacked directly beneath it. Opens on hover (desktop) or tap. */
 export function LangSwitch() {
@@ -121,17 +129,20 @@ export function LangSwitch() {
     onMouseEnter={() => { if (hoverable()) { cancelClose(); setOpen(true); } }}
     onMouseLeave={() => { if (hoverable()) { cancelClose(); closeTimer.current = setTimeout(() => setOpen(false), 150); } }}>
     <button type="button" className="lang-trigger" aria-haspopup="listbox" aria-expanded={open} aria-label={LABEL[lang] + ': ' + NAMES[lang]} title={NAMES[lang]} onClick={() => (hoverable() ? setOpen(true) : setOpen(o => !o))}>
-      <Flag lang={lang} size={22}/>{LANGS.length > 1 && instance.id === 'ca' && <span className="lang-code">{lang.toUpperCase()}</span>}
+      <Flag lang={lang} size={22}/>{LANGS.length > 1 && <span className="lang-code">{CODES[lang]}</span>}
       <svg className="lang-caret" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
     </button>
     {open && <ul className="lang-menu" role="listbox" aria-label={LABEL[lang]}>{ordered.map(l => <li key={l} role="option" aria-selected={l === lang}>
-      <button type="button" className={l === lang ? 'active' : ''} title={NAMES[l]} aria-label={NAMES[l]} onClick={() => { setLang(l); setOpen(false); }}><Flag lang={l} size={22}/>{instance.id === 'ca' && <span className="lang-code">{l.toUpperCase()}</span>}</button>
+      <button type="button" className={l === lang ? 'active' : ''} title={NAMES[l]} aria-label={NAMES[l]} onClick={() => { setLang(l); setOpen(false); }}><Flag lang={l} size={22}/><span className="lang-code">{CODES[l]}</span></button>
     </li>)}</ul>}
   </div>;
 }
 
 /** Pick a value per language, for examples and data that should not be looked up by English text. */
-export function byLang<T>(values: Partial<Record<Lang, T>> & {en: T}): T { return values[current] ?? values.en; }
+export function byLang<T>(values: Partial<Record<Lang, T>> & {en: T}): T {
+  if (current === 'sr-cyrl' && values['sr-cyrl'] === undefined && values.sr !== undefined) return (typeof values.sr === 'string' ? toCyrillic(values.sr) : values.sr) as T;
+  return values[current] ?? values.en;
+}
 
 /** Alias used in components where `t` is a common variable name. */
 export const tx = t;

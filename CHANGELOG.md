@@ -1,3 +1,7 @@
+## 2.21.0 - 2026-10-14
+- Serbian Cyrillic: the Serbian site now offers three options in the language menu, LAT (Latin), ЋИР (Cyrillic) and EN. Cyrillic is derived from the Serbian translations, so both scripts always match. Ticket codes, acronyms (PDF, GPS), brand names, Roman numerals in street names, emails and web addresses stay in Latin. Dates use the Serbian Cyrillic format.
+- The language menu shows a short code next to each flag on both sites.
+
 ## 2.20.0 - 2026-10-14
 - Duplicate prevention for staff reports: when the location of a new ticket is within 40 m of open tickets, the form lists them with their distance. Within 20 m the nearest is preselected, and saving adds the report and photos to that ticket as another observation. "Create a new ticket" is always available for a different problem. Works offline too.
 - Repeated reports raise the priority: low becomes standard at 3 observations and standard becomes urgent at 5; a report marked urgent raises it at once. The due date moves earlier to match. Resident reports use the same rules.

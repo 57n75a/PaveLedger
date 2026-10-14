@@ -5,7 +5,7 @@ import { instance } from "@/lib/instance";
 import SwRegister from "@/components/sw-register";
 
 const meta = instance.meta[instance.defaultLang] || instance.meta.en!;
-const HTML_LANG = { sr: "sr-Latn", en: "en", fr: "fr-CA" } as const;
+const HTML_LANG = { sr: "sr-Latn", "sr-cyrl": "sr-Cyrl", en: "en", fr: "fr-CA" } as const;
 
 export const metadata: Metadata = {
   title: meta.title,
