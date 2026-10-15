@@ -1166,7 +1166,7 @@ export const sr: Record<string, string> = {
   "Map: tap to mark the problem location": "Mapa: dodirnite da označite mesto problema",
   "Mark the location on the map and describe the problem in at least 5 characters.": "Označite lokaciju na mapi i opišite problem sa najmanje 5 znakova.",
   "Mark the location on the map, or use your location.": "Označite lokaciju na mapi ili koristite svoju lokaciju.",
-  "No connection. Check your internet and try again.": "Nema veze. Proverite internet i pokušajte ponovo.",
+  "No connection. Check your internet and try again.": "Offline ste. Proverite internet i pokušajte ponovo.",
   "No report was found with this code. Check the code and try again.": "Nije pronađena prijava sa ovim kodom. Proverite kod i pokušajte ponovo.",
   "Not needed": "Nije potrebno",
   "Only used if the team needs to ask you something": "Koristi se samo ako tim ima pitanje za vas",

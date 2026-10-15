@@ -11,7 +11,7 @@ const SINGLE: Record<string, string> = {
 // Kept in Latin: technical acronyms, scorecard grades (A-D), product and brand names.
 const KEEP = new Set(['PDF', 'CSV', 'XML', 'JSON', 'GPS', 'SMS', 'URL', 'API', 'AI', 'ID', 'UUID', 'OK', 'PNG', 'JPEG', 'JPG', 'WebP', 'MB', 'KB', 'RSD', 'EUR', 'CAD', 'PDV',
   'RS', 'CA', 'EU', 'USA', 'CAN', 'SRB', 'EN', 'FR', 'LAT', 'PL', 'CT', 'DEMO', 'SHA',
-  'A', 'B', 'C', 'D', 'PaveLedger', 'Google', 'OpenStreetMap', 'Leaflet', 'Supabase', 'Vercel', 'Neo4j', 'Cypher', 'Excel', 'Viber', 'WhatsApp', 'Resend', 'Photon', 'Nominatim', 'Chrome', 'Safari', 'Android', 'iPhone', 'iOS']);
+  'A', 'B', 'C', 'D', 'PaveLedger', 'Offline', 'offline', 'Online', 'online', 'Google', 'OpenStreetMap', 'Leaflet', 'Supabase', 'Vercel', 'Neo4j', 'Cypher', 'Excel', 'Viber', 'WhatsApp', 'Resend', 'Photon', 'Nominatim', 'Chrome', 'Safari', 'Android', 'iPhone', 'iOS']);
 const ROMAN = /^(?:I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV|XX)$/;
 
 function word(w: string): string {

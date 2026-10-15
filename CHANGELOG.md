@@ -1,3 +1,6 @@
+## 2.22.1 - 2026-10-15
+- Serbian: the no-connection message on the public report and tracking pages now says "Offline" too. In the Cyrillic option, "Offline" and "online" stay in Latin letters.
+
 ## 2.22.0 - 2026-10-14
 - Repair cost tracking: each ticket can record an estimate, the actual cost and the amount recovered from the contractor under warranty, with the cost to the municipality calculated. A one-click "Contractor pays in full" fills the recovered amount on warranty cases. Admins, team leads and the assigned analyst can edit; contractors do not see costs.
 - Analytics shows total estimated, actual, recovered and net cost, the share recovered under warranty, repairs more than 20% over estimate, and a breakdown by contractor. The monthly council report includes the cost table.
