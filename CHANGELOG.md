@@ -1,3 +1,8 @@
+## 2.23.0 - 2026-10-15
+- Daily backups: the daily job saves a copy of the whole workspace to private storage, kept for 30 days.
+- Platform settings → Backups (administrators only): see the backups, back up now, and restore a chosen backup. The current state is backed up first, so a restore can itself be undone.
+- Backups are checked before restoring (right format, same workspace, complete), and the administrator doing the restore keeps access.
+
 ## 2.22.1 - 2026-10-15
 - Serbian: the no-connection message on the public report and tracking pages now says "Offline" too. In the Cyrillic option, "Offline" and "online" stay in Latin letters.
 

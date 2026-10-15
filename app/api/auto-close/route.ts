@@ -4,6 +4,7 @@ import {runOutbox} from '@/lib/outbox';
 import {autoCloseDue,normalizeState,type State} from '@/lib/domain';
 import {overdueSweep,overdueDigests} from '@/lib/overdue';
 import {serverTx} from '@/lib/server-i18n';
+import {writeBackup} from '@/lib/backup-store';
 export const runtime='nodejs';export const dynamic='force-dynamic';
 
 export async function GET(req:Request){
@@ -24,6 +25,8 @@ export async function GET(req:Request){
   let mailed=0;
   if(mailReady()&&sweep.alerts.length){for(const m of overdueDigests(sweep.alerts,serverTx,new URL(req.url).origin)){const r=await sendMail(m);if(r.ok)mailed++;else console.error('Overdue email failed',r.reason)}}
   if(mailReady()&&(state.outbox||[]).some(i=>i.status==='queued'||i.status==='sending')){let rev=changed?row.revision+1:row.revision;try{await runOutbox(state,now,{max:5,send:m=>sendMail(m),save:async()=>{const ok=await saveWorkspace(state,rev);if(ok)rev+=1;return ok}})}catch(e){console.error('Notice delivery failed',e)}}
-  return Response.json({closed,overdue:sweep.overdue,alerts:sweep.alerts.length,escalated:sweep.escalated,mailed});
+  // Daily backup of the workspace as it stands after today's changes (kept 30 days).
+  let backup='';try{backup=(await writeBackup('daily',state,changed?row.revision+1:row.revision,'System')).name}catch(e){console.error('Daily backup failed',e)}
+  return Response.json({closed,overdue:sweep.overdue,alerts:sweep.alerts.length,escalated:sweep.escalated,mailed,backup});
  }catch{return Response.json({error:'Sweep failed'},{status:503})}
 }
