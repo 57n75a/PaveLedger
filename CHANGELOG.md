@@ -1,3 +1,6 @@
+## 2.24.0 - 2026-10-15
+- Usage analytics: page views and visitors on both demo sites through Vercel Web Analytics, without cookies or personal data. It starts recording once Web Analytics is enabled for each project in Vercel (Analytics tab).
+
 ## 2.23.0 - 2026-10-15
 - Daily backups: the daily job saves a copy of the whole workspace to private storage, kept for 30 days.
 - Platform settings → Backups (administrators only): see the backups, back up now, and restore a chosen backup. The current state is backed up first, so a restore can itself be undone.

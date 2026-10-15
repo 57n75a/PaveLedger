@@ -3,6 +3,7 @@ import "./globals.css";
 import { LangProvider } from "@/lib/i18n";
 import { instance } from "@/lib/instance";
 import SwRegister from "@/components/sw-register";
+import WebAnalytics from "@/components/web-analytics";
 
 const meta = instance.meta[instance.defaultLang] || instance.meta.en!;
 const HTML_LANG = { sr: "sr-Latn", "sr-cyrl": "sr-Cyrl", en: "en", fr: "fr-CA" } as const;
@@ -27,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang={HTML_LANG[instance.defaultLang]}>
-      <body className="antialiased"><LangProvider>{children}</LangProvider><SwRegister/></body>
+      <body className="antialiased"><LangProvider>{children}</LangProvider><SwRegister/><WebAnalytics/></body>
     </html>
   );
 }
