@@ -82,7 +82,7 @@ export function applyAction(s:State,m:Member,actual:Member,body:Record<string,un
   // Replaces the demo content. Only a real administrator, not a role preview, and real accounts are kept.
   if(actual.role!=='Admin'||m.id!==actual.id)throw new AppError('Only an administrator can load demo data. Return to your own identity first.',403);
   const pack=z.enum(['serbia','canada']).parse(body.pack);
-  const keep=s.members.filter(x=>!x.demo);
+  const keep=s.members.filter(x=>!x.demo&&(x.id===actual.id||x.id===ownerId||x.authUserId===ownerId));
   try{loadDemoPack(s,pack,keep,now,actual.name)}catch(e){throw new AppError((e as Error).message)}
   return;
  }else if(action==='team'){

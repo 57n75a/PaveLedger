@@ -1,6 +1,6 @@
 import {z} from 'zod';
 import {context,project,failure} from '@/lib/context';
-import {saveWorkspace} from '@/lib/store';
+import {saveWorkspace,adminClient} from '@/lib/store';
 import {applyAction,AppError} from '@/lib/actions';
 import {sendMail,mailReady} from '@/lib/mail';
 import {runOutbox} from '@/lib/outbox';
@@ -14,9 +14,11 @@ export async function POST(req:Request){try{
  let body:Record<string,unknown>;try{body=z.record(z.unknown()).parse(JSON.parse(raw));}catch{throw new AppError('Invalid request object.');}
  if(bodyTooLarge(size,body.action))throw new AppError('Request too large',413);
  const c=await context(req);if(body.revision!==c.row.revision)throw new AppError('Workspace changed. Refresh and review before saving.',409);
+ const before=body.action==='loadDemo'?c.state.members.filter(x=>!x.demo&&x.authUserId).map(x=>x.authUserId as string):[];
  applyAction(c.state,c.member,c.actual,body,new Date().toISOString(),c.row.owner);
  if(!await saveWorkspace(c.state,c.row.revision))throw new AppError('A simultaneous update occurred. Refresh and retry.',409);
  let revision=c.row.revision+1;
+ if(before.length){const kept=new Set(c.state.members.map(x=>x.authUserId).filter(Boolean));for(const id of before){if(kept.has(id)||id===c.row.owner)continue;try{await adminClient().auth.admin.deleteUser(id)}catch(e){console.error('Could not remove sign-in after demo reset',e)}}}
  if(mailReady()&&(c.state.outbox||[]).some(i=>i.status==='queued'||i.status==='sending')){try{await runOutbox(c.state,new Date().toISOString(),{max:3,appUrl:new URL(req.url).origin,send:m=>sendMail(m),save:async()=>{const ok=await saveWorkspace(c.state,revision);if(ok)revision+=1;return ok}})}catch(e){console.error('Notice delivery failed',e)}}
  return Response.json({...project(c.state,c.member,c.actual.role==='Admin'),revision},{headers:{'Cache-Control':'private, no-store'}});
  }catch(e){return failure(e instanceof z.ZodError?new AppError('Check the form: '+e.issues.map(i=>i.path.join('.')+' '+i.message).join('; ')):e)}}

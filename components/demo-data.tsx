@@ -22,7 +22,7 @@ export default function DemoDataCard({mutate, busy}: {mutate: (b: any) => Promis
         {PACKS.map(p => <option key={p.id} value={p.id}>{tx(p.label)}</option>)}
       </select>
       <button type="button" className="secondary" disabled={busy} onClick={async () => {
-        if (!confirm(tx('Replace all tickets, contracts, teams and demo people with the "{0}" demo? Real sign-in accounts are kept. This cannot be undone.', [tx(chosen.label)]))) return;
+        if (!confirm(tx('Replace all tickets, contracts, teams and people with the "{0}" demo? Every user you added, and their sign-in, is removed. Only you and the workspace owner are kept. This cannot be undone.', [tx(chosen.label)]))) return;
         await mutate({action: 'loadDemo', pack});
       }}><RotateCcw size={15}/>{tx('Load demo data')}</button>
     </div>
