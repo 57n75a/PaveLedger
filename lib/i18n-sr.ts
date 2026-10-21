@@ -1100,6 +1100,7 @@ export const sr: Record<string, string> = {
   "Workspace storage is not configured. Follow DEPLOYMENT.md.": "Skladište radnog prostora nije podešeno. Pratite DEPLOYMENT.md.",
   "Workspace storage is unavailable. Check the database migration and server key.": "Skladište radnog prostora nije dostupno. Proverite migraciju baze podataka i serverski ključ.",
   "Workspace unavailable": "Radni prostor nije dostupan",
+  "The demo was reset, but {0} sign-in account(s) could not be removed. Delete them in Supabase, Authentication, Users.": "Demo je resetovan, ali {0} nalog(a) za prijavu nije moglo biti uklonjeno. Obrišite ih u Supabase, Authentication, Users.",
   "Workspace updated": "Radni prostor je ažuriran",
   "XML template": "XML šablon",
   "Yes": "Da",

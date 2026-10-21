@@ -1099,6 +1099,7 @@ export const fr: Record<string, string> = {
   "Workspace storage is not configured. Follow DEPLOYMENT.md.": "Le stockage de l'espace de travail n'est pas configuré. Suivez DEPLOYMENT.md.",
   "Workspace storage is unavailable. Check the database migration and server key.": "Le stockage de l'espace de travail n'est pas disponible. Vérifiez la migration de la base de données et la clé du serveur.",
   "Workspace unavailable": "Espace de travail non disponible",
+  "The demo was reset, but {0} sign-in account(s) could not be removed. Delete them in Supabase, Authentication, Users.": "La démo a été réinitialisée, mais {0} compte(s) de connexion n’ont pas pu être supprimés. Supprimez-les dans Supabase, Authentication, Users.",
   "Workspace updated": "Espace de travail mis à jour",
   "XML template": "Modèle XML",
   "Yes": "Oui",

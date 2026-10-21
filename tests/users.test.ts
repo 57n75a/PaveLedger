@@ -1,6 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {seed,normalizeState,type Member,type State} from '../lib/domain.ts';
-import {provisionMember,resetMemberPassword,deleteMember,tempPassword,type LoginDeps} from '../lib/users.ts';
+import {provisionMember,resetMemberPassword,deleteMember,tempPassword,removeLoginsAfterReset,type LoginDeps} from '../lib/users.ts';
 const now='2026-10-05T12:00:00.000Z',owner='d226cfb5-73e3-41f2-8a21-d7721b3a40de';
 const fixture=()=>{const s=normalizeState(seed(owner,'owner@example.test'));return {s,admin:s.members[0],lead:s.members.find(x=>x.id==='demo-lead')!,analyst:s.members.find(x=>x.id==='demo-analyst')!}};
 function fakeDeps(over:Partial<LoginDeps>={}){
@@ -36,3 +36,20 @@ test('the membership is still removed if the login cannot be deleted',async()=>{
 test('members with ticket records are kept and their login is untouched',async()=>{const {s,admin,analyst}=fixture();const {deps,calls}=fakeDeps();await assert.rejects(()=>deleteMember(s,admin,admin,analyst.id,now,owner,deps,ok),/ticket records/);assert.equal(s.members.some(x=>x.id===analyst.id),true);assert.equal(calls.del.length,0)});
 test('delete is refused for yourself, the owner and non-admins',async()=>{const {s,admin,lead}=fixture();const m=linked(s,admin);const {deps,calls}=fakeDeps();await assert.rejects(()=>deleteMember(s,admin,admin,admin.id,now,owner,deps,ok));await assert.rejects(()=>deleteMember(s,lead,lead,m.id,now,owner,deps,ok),/administrator/);assert.equal(calls.del.length,0);assert.equal(s.members.some(x=>x.id===m.id),true)});
 test('no login is deleted when the deletion cannot be saved',async()=>{const {s,admin}=fixture();const m=linked(s,admin);const {deps,calls}=fakeDeps();await assert.rejects(()=>deleteMember(s,admin,admin,m.id,now,owner,deps,notOk),/simultaneous/);assert.equal(calls.del.length,0)});
+
+// Demo reset: sign-ins of removed members must really be deleted, and failures must be reported, not swallowed.
+test('after a demo reset, sign-ins of removed members are deleted; kept members and the owner are not',async()=>{
+ const keep=crypto.randomUUID(),gone1=crypto.randomUUID(),gone2=crypto.randomUUID();const {deps,calls}=fakeDeps();
+ const r=await removeLoginsAfterReset([keep,gone1,gone2,owner],new Set([keep]),owner,deps.deleteLogin);
+ assert.deepEqual(calls.del.sort(),[gone1,gone2].sort());assert.deepEqual(r,{removed:2,failed:[]});
+});
+test('a sign-in that fails to delete is retried once, then reported as failed',async()=>{
+ const flaky=crypto.randomUUID(),stuck=crypto.randomUUID();const seen:Record<string,number>={};
+ const del=async(id:string)=>{seen[id]=(seen[id]||0)+1;if(id===stuck||(id===flaky&&seen[id]===1))throw new Error('Database error deleting user')};
+ const r=await removeLoginsAfterReset([flaky,stuck],new Set(),owner,del);
+ assert.equal(seen[flaky],2);assert.equal(seen[stuck],2);assert.deepEqual(r,{removed:1,failed:[stuck]});
+});
+test('a sign-in that is already gone counts as removed',async()=>{
+ const id=crypto.randomUUID();const r=await removeLoginsAfterReset([id],new Set(),owner,async()=>{throw new Error('User not found')});
+ assert.deepEqual(r,{removed:1,failed:[]});
+});

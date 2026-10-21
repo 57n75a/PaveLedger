@@ -71,3 +71,19 @@ export function syncMemberEmail(s:State,member:Member,authEmail:string,now:strin
  s.events.unshift({at:now,actor:'System',action:'Email updated for '+member.name+' after a sign-in email change'});
  return true;
 }
+
+// After a demo reset, delete the sign-in accounts of members that no longer exist.
+// Supabase reports many failures as a returned error rather than a thrown one, so the injected deleteLogin must throw on any error.
+// Each account is tried twice; an account that is already gone counts as removed. Failures are returned so the caller can tell the admin.
+export async function removeLoginsAfterReset(candidates:string[],kept:Set<string>,ownerId:string,deleteLogin:(id:string)=>Promise<void>):Promise<{removed:number,failed:string[]}>{
+ const ids=[...new Set(candidates)].filter(id=>id&&!kept.has(id)&&id!==ownerId);
+ let removed=0;const failed:string[]=[];
+ for(const id of ids){
+  let done=false;
+  for(let attempt=0;attempt<2&&!done;attempt++){
+   try{await deleteLogin(id);done=true}catch(e){if(/not.?found/i.test((e as Error)?.message||''))done=true}
+  }
+  if(done)removed++;else failed.push(id);
+ }
+ return {removed,failed};
+}

@@ -4,6 +4,7 @@ import {saveWorkspace,adminClient} from '@/lib/store';
 import {applyAction,AppError} from '@/lib/actions';
 import {sendMail,mailReady} from '@/lib/mail';
 import {runOutbox} from '@/lib/outbox';
+import {removeLoginsAfterReset} from '@/lib/users';
 import {MAX_IMAGE_BODY,bodyTooLarge} from '@/lib/limits';
 export const dynamic='force-dynamic';export const runtime='nodejs';
 export async function GET(req:Request){try{const c=await context(req);return Response.json({...project(c.state,c.member,c.actual.role==='Admin'),revision:c.row.revision},{headers:{'Cache-Control':'private, no-store'}})}catch(e){return failure(e)}}
@@ -18,7 +19,11 @@ export async function POST(req:Request){try{
  applyAction(c.state,c.member,c.actual,body,new Date().toISOString(),c.row.owner);
  if(!await saveWorkspace(c.state,c.row.revision))throw new AppError('A simultaneous update occurred. Refresh and retry.',409);
  let revision=c.row.revision+1;
- if(before.length){const kept=new Set(c.state.members.map(x=>x.authUserId).filter(Boolean));for(const id of before){if(kept.has(id)||id===c.row.owner)continue;try{await adminClient().auth.admin.deleteUser(id)}catch(e){console.error('Could not remove sign-in after demo reset',e)}}}
+ let loginCleanup:{removed:number,failed:number}|undefined;
+ if(before.length){const kept=new Set(c.state.members.map(x=>x.authUserId).filter(Boolean) as string[]);
+  const r=await removeLoginsAfterReset(before,kept,c.row.owner,async id=>{const {error}=await adminClient().auth.admin.deleteUser(id);if(error)throw new Error(error.message)});
+  if(r.failed.length)console.error('Could not remove '+r.failed.length+' sign-in account(s) after demo reset',r.failed);
+  loginCleanup={removed:r.removed,failed:r.failed.length};}
  if(mailReady()&&(c.state.outbox||[]).some(i=>i.status==='queued'||i.status==='sending')){try{await runOutbox(c.state,new Date().toISOString(),{max:3,appUrl:new URL(req.url).origin,send:m=>sendMail(m),save:async()=>{const ok=await saveWorkspace(c.state,revision);if(ok)revision+=1;return ok}})}catch(e){console.error('Notice delivery failed',e)}}
- return Response.json({...project(c.state,c.member,c.actual.role==='Admin'),revision},{headers:{'Cache-Control':'private, no-store'}});
+ return Response.json({...project(c.state,c.member,c.actual.role==='Admin'),revision,...(loginCleanup?{loginCleanup}:{})},{headers:{'Cache-Control':'private, no-store'}});
  }catch(e){return failure(e instanceof z.ZodError?new AppError('Check the form: '+e.issues.map(i=>i.path.join('.')+' '+i.message).join('; ')):e)}}
